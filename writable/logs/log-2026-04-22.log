@@ -1,0 +1,483 @@
+DEBUG - 2026-04-22 09:38:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:38:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:38:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:38:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:38:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:38:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:38:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:53:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:53:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:53:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:53:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:53:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:54:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:55:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 09:55:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 10:08:19 --> Error: Object of class CodeIgniter\Router\RouteCollection could not be converted to string
+[Method: GET, Route: dashboard]
+in APPPATH\Config\Routes.php on line 42.
+ 1 SYSTEMPATH\Router\RouteCollection.php(339): require()
+ 2 SYSTEMPATH\CodeIgniter.php(818): CodeIgniter\Router\RouteCollection->loadRoutes()
+ 3 SYSTEMPATH\CodeIgniter.php(441): CodeIgniter\CodeIgniter->tryToRouteIt(null)
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+DEBUG - 2026-04-22 10:09:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:09:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:09:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:10:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:11:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:11:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:11:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 10:11:44 --> Exception: The PHP GD extension is required, but is not installed.
+[Method: GET, Route: pedidos/pdf/5]
+in VENDORPATH\dompdf\dompdf\lib\Cpdf.php on line 6226.
+ 1 VENDORPATH\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_A40A.tmp', 33.0, 751.89, 63.75, 63.75)
+ 2 VENDORPATH\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_A40A.tmp', 33.0, 26.25, 63.75, 63.75, 'normal')
+ 3 VENDORPATH\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+ 4 VENDORPATH\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+ 5 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+ 6 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+ 7 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+ 8 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+ 9 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+10 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+11 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+12 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+13 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+14 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+15 VENDORPATH\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+16 VENDORPATH\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(null)
+17 VENDORPATH\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+18 APPPATH\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+19 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('5')
+20 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+21 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+25 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+CRITICAL - 2026-04-22 10:11:50 --> ErrorException: Allowed memory size of 536870912 bytes exhausted (tried to allocate 257953792 bytes)
+【Previous Exception】
+Exception
+The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs...', 33.0, 751.89, 63.75, 63.75)
+#1 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs...', 33.0, 26.25, 63.75, 63.75, 'normal')
+#2 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#10 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#11 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#12 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#13 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#14 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#15 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#16 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#17 C:\xampp\htdocs\stock2\app\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+#18 C:\xampp\htdocs\stock2\system\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('5')
+#19 C:\xampp\htdocs\stock2\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+#20 C:\xampp\htdocs\stock2\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\stock2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\stock2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\stock2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 C:\xampp\htdocs\stock2\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#25 {main}
+[Method: GET, Route: pedidos/pdf/5]
+in APPPATH\Views\errors\html\error_exception.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-04-22 10:12:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 10:12:03 --> Exception: The PHP GD extension is required, but is not installed.
+[Method: GET, Route: pedidos/pdf/4]
+in VENDORPATH\dompdf\dompdf\lib\Cpdf.php on line 6226.
+ 1 VENDORPATH\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_F23B.tmp', 33.0, 751.89, 63.75, 63.75)
+ 2 VENDORPATH\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_F23B.tmp', 33.0, 26.25, 63.75, 63.75, 'normal')
+ 3 VENDORPATH\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+ 4 VENDORPATH\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+ 5 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+ 6 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+ 7 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+ 8 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+ 9 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+10 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+11 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+12 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+13 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+14 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+15 VENDORPATH\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+16 VENDORPATH\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(null)
+17 VENDORPATH\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+18 APPPATH\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+19 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('4')
+20 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+21 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+25 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+CRITICAL - 2026-04-22 10:12:10 --> ErrorException: Allowed memory size of 536870912 bytes exhausted (tried to allocate 257953792 bytes)
+【Previous Exception】
+Exception
+The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs...', 33.0, 751.89, 63.75, 63.75)
+#1 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs...', 33.0, 26.25, 63.75, 63.75, 'normal')
+#2 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#10 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#11 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#12 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#13 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#14 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#15 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#16 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#17 C:\xampp\htdocs\stock2\app\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+#18 C:\xampp\htdocs\stock2\system\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('4')
+#19 C:\xampp\htdocs\stock2\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+#20 C:\xampp\htdocs\stock2\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\stock2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\stock2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\stock2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 C:\xampp\htdocs\stock2\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#25 {main}
+[Method: GET, Route: pedidos/pdf/4]
+in APPPATH\Views\errors\html\error_exception.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-04-22 10:12:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 10:12:16 --> Exception: The PHP GD extension is required, but is not installed.
+[Method: GET, Route: pedidos/pdf/5]
+in VENDORPATH\dompdf\dompdf\lib\Cpdf.php on line 6226.
+ 1 VENDORPATH\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_231F.tmp', 33.0, 751.89, 63.75, 63.75)
+ 2 VENDORPATH\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_231F.tmp', 33.0, 26.25, 63.75, 63.75, 'normal')
+ 3 VENDORPATH\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+ 4 VENDORPATH\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+ 5 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+ 6 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+ 7 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+ 8 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+ 9 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+10 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+11 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+12 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+13 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+14 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+15 VENDORPATH\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+16 VENDORPATH\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(null)
+17 VENDORPATH\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+18 APPPATH\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+19 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('5')
+20 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+21 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+25 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+CRITICAL - 2026-04-22 10:12:23 --> ErrorException: Allowed memory size of 536870912 bytes exhausted (tried to allocate 257953792 bytes)
+【Previous Exception】
+Exception
+The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs...', 33.0, 751.89, 63.75, 63.75)
+#1 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs...', 33.0, 26.25, 63.75, 63.75, 'normal')
+#2 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#10 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#11 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#12 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#13 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#14 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#15 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#16 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#17 C:\xampp\htdocs\stock2\app\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+#18 C:\xampp\htdocs\stock2\system\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('5')
+#19 C:\xampp\htdocs\stock2\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+#20 C:\xampp\htdocs\stock2\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\stock2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\stock2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\stock2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 C:\xampp\htdocs\stock2\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#25 {main}
+[Method: GET, Route: pedidos/pdf/5]
+in APPPATH\Views\errors\html\error_exception.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-04-22 10:12:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:12:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:13:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:13:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:13:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:13:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:13:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:18:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:18:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:19:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:29:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:29:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:31:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:31:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:32:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:33:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:33:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:33:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:33:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 10:33:21 --> Exception: The PHP GD extension is required, but is not installed.
+[Method: GET, Route: pedidos/pdf/1]
+in VENDORPATH\dompdf\dompdf\lib\Cpdf.php on line 6226.
+ 1 VENDORPATH\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_6A8A.tmp', 33.0, 751.89, 63.75, 63.75)
+ 2 VENDORPATH\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_6A8A.tmp', 33.0, 26.25, 63.75, 63.75, 'normal')
+ 3 VENDORPATH\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+ 4 VENDORPATH\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+ 5 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+ 6 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+ 7 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+ 8 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+ 9 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+10 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+11 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+12 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+13 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+14 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+15 VENDORPATH\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+16 VENDORPATH\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(null)
+17 VENDORPATH\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+18 APPPATH\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+19 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('1')
+20 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+21 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+25 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+CRITICAL - 2026-04-22 10:33:27 --> ErrorException: Allowed memory size of 536870912 bytes exhausted (tried to allocate 257953792 bytes)
+【Previous Exception】
+Exception
+The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs...', 33.0, 751.89, 63.75, 63.75)
+#1 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs...', 33.0, 26.25, 63.75, 63.75, 'normal')
+#2 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#10 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#11 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#12 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#13 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#14 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#15 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#16 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#17 C:\xampp\htdocs\stock2\app\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+#18 C:\xampp\htdocs\stock2\system\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('1')
+#19 C:\xampp\htdocs\stock2\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+#20 C:\xampp\htdocs\stock2\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\stock2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\stock2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\stock2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 C:\xampp\htdocs\stock2\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#25 {main}
+[Method: GET, Route: pedidos/pdf/1]
+in APPPATH\Views\errors\html\error_exception.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-04-22 10:49:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:49:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:49:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:49:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:49:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 10:49:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 10:49:17 --> Exception: The PHP GD extension is required, but is not installed.
+[Method: GET, Route: pedidos/pdf/1]
+in VENDORPATH\dompdf\dompdf\lib\Cpdf.php on line 6226.
+ 1 VENDORPATH\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_196.tmp', 33.0, 751.89, 63.75, 63.75)
+ 2 VENDORPATH\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_196.tmp', 33.0, 26.25, 63.75, 63.75, 'normal')
+ 3 VENDORPATH\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+ 4 VENDORPATH\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+ 5 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+ 6 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+ 7 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+ 8 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+ 9 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+10 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+11 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+12 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+13 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+14 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+15 VENDORPATH\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+16 VENDORPATH\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(null)
+17 VENDORPATH\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+18 APPPATH\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+19 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('1')
+20 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+21 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+25 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+CRITICAL - 2026-04-22 10:49:24 --> ErrorException: Allowed memory size of 536870912 bytes exhausted (tried to allocate 257953792 bytes)
+【Previous Exception】
+Exception
+The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs...', 33.0, 751.89, 63.75, 63.75)
+#1 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs...', 33.0, 26.25, 63.75, 63.75, 'normal')
+#2 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#10 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#11 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#12 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#13 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#14 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#15 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#16 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#17 C:\xampp\htdocs\stock2\app\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+#18 C:\xampp\htdocs\stock2\system\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('1')
+#19 C:\xampp\htdocs\stock2\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+#20 C:\xampp\htdocs\stock2\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\stock2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\stock2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\stock2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 C:\xampp\htdocs\stock2\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#25 {main}
+[Method: GET, Route: pedidos/pdf/1]
+in APPPATH\Views\errors\html\error_exception.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-04-22 11:05:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:05:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:05:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:05:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:05:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:05:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-04-22 11:05:33 --> Exception: The PHP GD extension is required, but is not installed.
+[Method: GET, Route: pedidos/pdf/1]
+in VENDORPATH\dompdf\dompdf\lib\Cpdf.php on line 6226.
+ 1 VENDORPATH\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_E6F1.tmp', 33.0, 751.89, 63.75, 63.75)
+ 2 VENDORPATH\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs\\stock2\\writable\\dompdf\\ca_E6F1.tmp', 33.0, 26.25, 63.75, 63.75, 'normal')
+ 3 VENDORPATH\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+ 4 VENDORPATH\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+ 5 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+ 6 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+ 7 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+ 8 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+ 9 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+10 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+11 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+12 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+13 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+14 VENDORPATH\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+15 VENDORPATH\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+16 VENDORPATH\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(null)
+17 VENDORPATH\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+18 APPPATH\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+19 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('1')
+20 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+21 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+22 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+23 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+24 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+25 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\stock2\\public\\index.php')
+CRITICAL - 2026-04-22 11:05:40 --> ErrorException: Allowed memory size of 536870912 bytes exhausted (tried to allocate 257953792 bytes)
+【Previous Exception】
+Exception
+The PHP GD extension is required, but is not installed.
+#0 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Adapter\CPDF.php(674): Dompdf\Cpdf->addPngFromFile('C:\\xampp\\htdocs...', 33.0, 751.89, 63.75, 63.75)
+#1 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer\Image.php(63): Dompdf\Adapter\CPDF->image('C:\\xampp\\htdocs...', 33.0, 26.25, 63.75, 63.75, 'normal')
+#2 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(305): Dompdf\Renderer\Image->render(Object(Dompdf\FrameDecorator\Image))
+#3 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(140): Dompdf\Renderer->_render_frame('image', Object(Dompdf\FrameDecorator\Image))
+#4 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Image))
+#5 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#6 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#7 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#8 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#9 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableCell))
+#10 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRow))
+#11 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\TableRowGroup))
+#12 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Table))
+#13 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Renderer.php(207): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#14 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameReflower\Page.php(148): Dompdf\Renderer->render(Object(Dompdf\FrameDecorator\Block))
+#15 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\FrameDecorator\AbstractFrameDecorator.php(915): Dompdf\FrameReflower\Page->reflow(NULL)
+#16 C:\xampp\htdocs\stock2\vendor\dompdf\dompdf\src\Dompdf.php(817): Dompdf\FrameDecorator\AbstractFrameDecorator->reflow()
+#17 C:\xampp\htdocs\stock2\app\Controllers\Pedidos.php(661): Dompdf\Dompdf->render()
+#18 C:\xampp\htdocs\stock2\system\CodeIgniter.php(951): App\Controllers\Pedidos->pdf('1')
+#19 C:\xampp\htdocs\stock2\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Pedidos))
+#20 C:\xampp\htdocs\stock2\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#21 C:\xampp\htdocs\stock2\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#22 C:\xampp\htdocs\stock2\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#23 C:\xampp\htdocs\stock2\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#24 C:\xampp\htdocs\stock2\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#25 {main}
+[Method: GET, Route: pedidos/pdf/1]
+in APPPATH\Views\errors\html\error_exception.php on line 131.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2026-04-22 11:22:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:22:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:22:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:22:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:22:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:22:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:22:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:23:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:23:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:23:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:24:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:25:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:25:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:25:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:26:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:26:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:27:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:27:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-04-22 11:27:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

@@ -26,7 +26,10 @@
         </div>
         <div class="d-flex gap-2">
             <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">Volver</a>
-            <a href="<?= base_url('precio-productos/create') ?>" class="btn btn-primary">Nuevo precio</a>
+
+            <?php if (session('rol') === 'admin'): ?>
+                <a href="<?= base_url('precio-productos/create') ?>" class="btn btn-primary">Nuevo precio</a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -72,9 +75,13 @@
                                     <td>$ <?= number_format((float) $precio['precio_unitario'], 2, ',', '.') ?></td>
                                     <td><?= esc($precio['created_at']) ?></td>
                                     <td class="text-center">
-                                        <a href="<?= base_url('precio-productos/edit/' . $precio['id']) ?>" class="btn btn-sm btn-warning">
-                                            Editar
-                                        </a>
+                                        <?php if (session('rol') === 'admin'): ?>
+                                            <a href="<?= base_url('precio-productos/edit/' . $precio['id']) ?>" class="btn btn-sm btn-warning">
+                                                Editar
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted">Solo lectura</span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

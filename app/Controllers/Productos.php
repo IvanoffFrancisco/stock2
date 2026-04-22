@@ -37,6 +37,10 @@ class Productos extends BaseController
 
     public function create()
     {
+        if (session('rol') !== 'admin') {
+            return redirect()->to('/productos')->with('error', 'No tenés permiso para crear productos.');
+        }
+
         $categoriaModel = new CategoriaModel();
 
         $data = [
@@ -48,6 +52,10 @@ class Productos extends BaseController
 
     public function store()
     {
+        if (session('rol') !== 'admin') {
+            return redirect()->to('/productos')->with('error', 'No tenés permiso para crear productos.');
+        }
+
         $rules = [
             'categoria_id'       => 'required|is_not_unique[categorias.id]',
             'nombre'             => 'required|min_length[2]|max_length[150]',

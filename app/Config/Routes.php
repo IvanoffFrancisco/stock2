@@ -31,7 +31,7 @@ $routes->group('categorias', ['filter' => 'admin'], function($routes) {
     $routes->post('delete/(:num)', 'Categorias::delete/$1');
 });
 
-$routes->group('productos', ['filter' => 'admin'], function($routes) {
+$routes->group('productos', ['filter' => 'adminvendedor'], function($routes) {
     $routes->get('/', 'Productos::index');
     $routes->get('create', 'Productos::create');
     $routes->post('store', 'Productos::store');
@@ -39,7 +39,7 @@ $routes->group('productos', ['filter' => 'admin'], function($routes) {
     $routes->post('update/(:num)', 'Productos::update/$1');
 });
 
-$routes->group('precio-productos', ['filter' => 'admin'], function($routes) {
+$routes->group('precio-productos', ['filter' => 'adminvendedor'], function($routes) {
     $routes->get('/', 'PrecioProductos::index');
     $routes->get('create', 'PrecioProductos::create');
     $routes->post('store', 'PrecioProductos::store');

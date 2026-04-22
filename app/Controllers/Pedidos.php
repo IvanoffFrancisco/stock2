@@ -589,6 +589,8 @@ class Pedidos extends BaseController
 }
 public function pdf($id = null)
 {
+    ini_set('memory_limit', '1024M');
+
     $pedidoModel = new PedidoModel();
     $pedidoDetalleModel = new PedidoDetalleModel();
 
@@ -621,7 +623,7 @@ public function pdf($id = null)
 
     $tempDir = WRITEPATH . 'dompdf';
     if (!is_dir($tempDir)) {
-    mkdir($tempDir, 0777, true);
+        mkdir($tempDir, 0777, true);
     }
 
     $options->setTempDir($tempDir);
@@ -662,24 +664,24 @@ public function pdf($id = null)
 
     return $this->response
         ->setHeader('Content-Type', 'application/pdf')
+        ->setHeader('Content-Disposition', 'inline; filename="pedido-' . $pedido['id'] . '.pdf"')
         ->setBody($dompdf->output());
 }
+private function obtenerLogoPdf(): string
+{
+    $rutaLogo = FCPATH . 'img/logo-gp.png';
 
-    private function obtenerLogoPdf(): string
-    {
-        $rutaLogo = FCPATH . 'img/logo-gp.png';
-
-        if (!is_file($rutaLogo)) {
-            return '';
-        }
-
-        $contenido = @file_get_contents($rutaLogo);
-
-        if ($contenido === false) {
-            return 'file://' . str_replace('\\', '/', realpath($rutaLogo) ?: $rutaLogo);
-        }
-
-        return 'data:image/png;base64,' . base64_encode($contenido);
+    if (!is_file($rutaLogo)) {
+        return '';
     }
+
+    $realPath = realpath($rutaLogo);
+
+    if ($realPath === false) {
+        return '';
+    }
+
+    return 'file:///' . str_replace('\\', '/', $realPath);
+}
 
 }

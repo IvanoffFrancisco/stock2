@@ -26,6 +26,10 @@ class PrecioProductos extends BaseController
 
     public function create()
     {
+        if (session('rol') !== 'admin') {
+            return redirect()->to('/precio-productos')->with('error', 'No tenés permiso para crear precios.');
+        }
+
         $productoModel = new ProductoModel();
 
         $productos = $productoModel
@@ -43,6 +47,10 @@ class PrecioProductos extends BaseController
 
     public function store()
     {
+        if (session('rol') !== 'admin') {
+            return redirect()->to('/precio-productos')->with('error', 'No tenés permiso para crear precios.');
+        }
+
         $rules = [
             'producto_id'      => 'required|is_not_unique[productos.id]',
             'cantidad_desde'   => 'required|integer|greater_than[0]',
@@ -77,6 +85,10 @@ class PrecioProductos extends BaseController
 
     public function edit($id)
     {
+        if (session('rol') !== 'admin') {
+            return redirect()->to('/precio-productos')->with('error', 'No tenés permiso para editar precios.');
+        }
+
         $precioProductoModel = new PrecioProductoModel();
         $productoModel = new ProductoModel();
 
@@ -101,6 +113,10 @@ class PrecioProductos extends BaseController
 
     public function update($id)
     {
+        if (session('rol') !== 'admin') {
+            return redirect()->to('/precio-productos')->with('error', 'No tenés permiso para editar precios.');
+        }
+
         $precioProductoModel = new PrecioProductoModel();
         $precioActual = $precioProductoModel->find($id);
 

@@ -152,7 +152,7 @@
                         <tr>
                             <td class="logo-box">
                                 <?php if (!empty($logoPath)): ?>
-                                    <img src="<?= esc($logoPath, 'attr') ?>" alt="Logo">
+                                    <img src="<?= esc($logoPath, 'attr') ?>" alt=" ">
                                 <?php endif; ?>
                             </td>
                             <td>

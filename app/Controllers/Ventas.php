@@ -117,29 +117,31 @@ class Ventas extends BaseController
     }
     public function pdf($id = null)
 {
-    $ventaModel = new VentaModel();
-    $ventaDetalleModel = new VentaDetalleModel();
+    ini_set('memory_limit', '1024M');
 
-    $venta = $ventaModel
-        ->select('ventas.*, clientes.nombre AS cliente_nombre, clientes.telefono, clientes.direccion, clientes.localidad, usuarios.nombre AS vendedor_nombre')
-        ->join('clientes', 'clientes.id = ventas.cliente_id')
-        ->join('usuarios', 'usuarios.id = ventas.usuario_id')
-        ->where('ventas.id', $id)
+    $pedidoModel = new PedidoModel();
+    $pedidoDetalleModel = new PedidoDetalleModel();
+
+    $pedido = $pedidoModel
+        ->select('pedidos.*, clientes.nombre AS cliente_nombre, clientes.telefono, clientes.direccion, clientes.localidad, usuarios.nombre AS vendedor_nombre')
+        ->join('clientes', 'clientes.id = pedidos.cliente_id')
+        ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
+        ->where('pedidos.id', $id)
         ->first();
 
-    if (!$venta) {
-        return redirect()->to('/ventas')->with('error', 'La venta no existe.');
+    if (!$pedido) {
+        return redirect()->to('/pedidos')->with('error', 'El pedido no existe.');
     }
 
-    if (session('rol') === 'vendedor' && (int) $venta['usuario_id'] !== (int) session('id_usuario')) {
-        return redirect()->to('/ventas')->with('error', 'No tienes permisos para ver esta venta.');
+    if (session('rol') === 'vendedor' && (int) $pedido['usuario_id'] !== (int) session('id_usuario')) {
+        return redirect()->to('/pedidos')->with('error', 'No tienes permisos para ver este pedido.');
     }
 
-    $detalles = $ventaDetalleModel
-        ->select('venta_detalles.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
-        ->join('productos', 'productos.id = venta_detalles.producto_id')
+    $detalles = $pedidoDetalleModel
+        ->select('pedido_detalles.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
+        ->join('productos', 'productos.id = pedido_detalles.producto_id')
         ->join('categorias', 'categorias.id = productos.categoria_id')
-        ->where('venta_detalles.venta_id', $id)
+        ->where('pedido_detalles.pedido_id', $id)
         ->findAll();
 
     $options = new Options();
@@ -157,23 +159,23 @@ class Ventas extends BaseController
     $dompdf = new Dompdf($options);
 
     $html = view('pdf/remito', [
-        'tituloDocumento' => 'REMITO / VENTA',
-        'numeroDocumento' => str_pad((string) $venta['id'], 6, '0', STR_PAD_LEFT),
-        'fechaDocumento'  => $venta['fecha_venta'] ?? date('Y-m-d'),
-        'fechaEntrega'    => $venta['fecha_entrega'] ?? '-',
-        'formaPago'       => $venta['forma_pago'] ?? '-',
-        'estado'          => ucfirst($venta['estado_entrega'] ?? '-'),
-        'vendedorNombre'  => $venta['vendedor_nombre'] ?? '-',
+        'tituloDocumento' => 'REMITO / PEDIDO',
+        'numeroDocumento' => str_pad((string) $pedido['id'], 6, '0', STR_PAD_LEFT),
+        'fechaDocumento'  => $pedido['fecha_pedido'] ?? date('Y-m-d'),
+        'fechaEntrega'    => $pedido['fecha_entrega'] ?? '-',
+        'formaPago'       => $pedido['forma_pago'] ?? '-',
+        'estado'          => ucfirst($pedido['estado'] ?? '-'),
+        'vendedorNombre'  => $pedido['vendedor_nombre'] ?? '-',
         'cliente' => [
-            'nombre'    => $venta['cliente_nombre'] ?? '-',
-            'telefono'  => $venta['telefono'] ?? '-',
-            'direccion' => $venta['direccion'] ?? '-',
-            'localidad' => $venta['localidad'] ?? '-',
+            'nombre'    => $pedido['cliente_nombre'] ?? '-',
+            'telefono'  => $pedido['telefono'] ?? '-',
+            'direccion' => $pedido['direccion'] ?? '-',
+            'localidad' => $pedido['localidad'] ?? '-',
         ],
         'detalles'  => $detalles,
-        'subtotal'  => $venta['subtotal'] ?? 0,
-        'descuento' => $venta['descuento'] ?? 0,
-        'total'     => $venta['total'] ?? 0,
+        'subtotal'  => $pedido['subtotal'] ?? 0,
+        'descuento' => $pedido['descuento'] ?? 0,
+        'total'     => $pedido['total'] ?? 0,
         'empresa'   => [
             'nombre'    => 'GP',
             'direccion' => 'Tu dirección',
@@ -190,24 +192,24 @@ class Ventas extends BaseController
 
     return $this->response
         ->setHeader('Content-Type', 'application/pdf')
+        ->setHeader('Content-Disposition', 'inline; filename="pedido-' . $pedido['id'] . '.pdf"')
         ->setBody($dompdf->output());
 }
+private function obtenerLogoPdf(): string
+{
+    $rutaLogo = FCPATH . 'img/logo-gp.png';
 
-    private function obtenerLogoPdf(): string
-    {
-        $rutaLogo = FCPATH . 'img/logo-gp.png';
-
-        if (!is_file($rutaLogo)) {
-            return '';
-        }
-
-        $contenido = @file_get_contents($rutaLogo);
-
-        if ($contenido === false) {
-            return 'file://' . str_replace('\\', '/', realpath($rutaLogo) ?: $rutaLogo);
-        }
-
-        return 'data:image/png;base64,' . base64_encode($contenido);
+    if (!is_file($rutaLogo)) {
+        return '';
     }
+
+    $realPath = realpath($rutaLogo);
+
+    if ($realPath === false) {
+        return '';
+    }
+
+    return 'file:///' . str_replace('\\', '/', $realPath);
+}
 
 }

@@ -292,7 +292,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="col-md-6 col-xl-4">
                 <div class="dashboard-card">
                     <div class="card-body">
@@ -370,6 +370,32 @@
                         <p class="card-text">Consulta, registra y organiza tus clientes.</p>
                         <a href="<?= base_url('clientes') ?>" class="btn btn-success btn-soft w-100">
                             <i class="bi bi-arrow-right-circle me-1"></i>Ir a clientes
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <div class="card-icon icon-success"><i class="bi bi-box2-heart-fill"></i></div>
+                        <h5 class="card-title">Productos</h5>
+                        <p class="card-text">Consulta los productos y el stock disponible.</p>
+                        <a href="<?= base_url('productos') ?>" class="btn btn-success btn-soft w-100">
+                            <i class="bi bi-arrow-right-circle me-1"></i>Ir a productos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <div class="card-icon icon-warning"><i class="bi bi-cash-coin"></i></div>
+                        <h5 class="card-title">Precios</h5>
+                        <p class="card-text">Consulta los precios cargados de los productos.</p>
+                        <a href="<?= base_url('precio-productos') ?>" class="btn btn-warning btn-soft w-100 text-dark">
+                            <i class="bi bi-arrow-right-circle me-1"></i>Ir a precios
                         </a>
                     </div>
                 </div>

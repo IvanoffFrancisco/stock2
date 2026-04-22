@@ -25,9 +25,12 @@
             <p class="text-muted mb-0">Administración de productos de stock</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">Volver</a>
-            <a href="<?= base_url('productos/create') ?>" class="btn btn-primary">Nuevo producto</a>
-        </div>
+    <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">Volver</a>
+
+    <?php if (session('rol') === 'admin'): ?>
+        <a href="<?= base_url('productos/create') ?>" class="btn btn-primary">Nuevo producto</a>
+    <?php endif; ?>
+</div>
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
