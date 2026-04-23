@@ -29,6 +29,15 @@
                 <a href="<?= base_url('pedidos') ?>" class="btn btn-outline-secondary">Volver</a>
             </div>
 
+            <div class="alert alert-warning">
+                <strong>Importante:</strong>
+                <ul class="mb-0">
+                    <li>Si el pedido se guarda como <strong>pendiente</strong>, el stock se descuenta inmediatamente.</li>
+                    <li>Si el pedido se guarda como <strong>entregado</strong>, también descuenta stock y genera la venta.</li>
+                    <li>Si el pedido se guarda como <strong>cancelado</strong>, no descuenta stock.</li>
+                </ul>
+            </div>
+
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger">
                     <?= session()->getFlashdata('error') ?>

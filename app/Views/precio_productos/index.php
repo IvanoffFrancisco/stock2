@@ -19,7 +19,7 @@
 </nav>
 
 <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h1 class="h3 mb-1">Precios de productos</h1>
             <p class="text-muted mb-0">Precios por rango de cantidad de bolsas</p>
@@ -45,6 +45,45 @@
         </div>
     <?php endif; ?>
 
+    <div class="card border-0 shadow rounded-4 mb-4">
+        <div class="card-body p-4">
+            <form action="<?= base_url('precio-productos') ?>" method="get">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="buscar" class="form-label fw-semibold">Buscar por nombre de producto</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="buscar"
+                            name="buscar"
+                            value="<?= esc($buscar ?? '') ?>"
+                            placeholder="Ej: Biomax, Biocare..."
+                        >
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="molino" class="form-label fw-semibold">Filtrar por molino</label>
+                        <select class="form-select" id="molino" name="molino">
+                            <option value="">Todos los molinos</option>
+                            <?php foreach (($molinos ?? []) as $item): ?>
+                                <option value="<?= esc($item['molino']) ?>" <?= (($molino ?? '') === $item['molino']) ? 'selected' : '' ?>>
+                                    <?= esc($item['molino']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" class="btn btn-dark flex-fill">Buscar</button>
+                            <a href="<?= base_url('precio-productos') ?>" class="btn btn-outline-secondary flex-fill">Limpiar</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="card border-0 shadow rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -53,6 +92,7 @@
                         <tr>
                             <th class="px-4 py-3">ID</th>
                             <th class="py-3">Producto</th>
+                            <th class="py-3">Molino</th>
                             <th class="py-3">Categoría</th>
                             <th class="py-3">Kg</th>
                             <th class="py-3">Cantidad desde</th>
@@ -68,6 +108,7 @@
                                 <tr>
                                     <td class="px-4"><?= esc($precio['id']) ?></td>
                                     <td><?= esc($precio['producto_nombre']) ?></td>
+                                    <td><?= esc($precio['molino'] ?? '-') ?></td>
                                     <td><?= esc($precio['categoria_nombre']) ?></td>
                                     <td><?= esc($precio['kilogramos']) ?></td>
                                     <td><?= esc($precio['cantidad_desde']) ?></td>
@@ -87,8 +128,8 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="9" class="text-center py-4">
-                                    No hay precios cargados.
+                                <td colspan="10" class="text-center py-4">
+                                    No se encontraron precios con los filtros aplicados.
                                 </td>
                             </tr>
                         <?php endif; ?>

@@ -103,6 +103,10 @@
         </div>
     <?php endif; ?>
 
+    <div class="alert alert-info">
+        <strong>Importante:</strong> los pedidos en estado <strong>pendiente</strong> o <strong>entregado</strong> descuentan stock inmediatamente. Los pedidos <strong>cancelados</strong> devuelven stock.
+    </div>
+
     <div class="card border-0 shadow rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -129,9 +133,9 @@
                                     <td class="px-4"><?= esc($pedido['id']) ?></td>
                                     <td><?= esc($pedido['cliente_nombre']) ?></td>
                                     <td><?= esc($pedido['vendedor_nombre']) ?></td>
-                                    <td><?= esc($pedido['fecha_pedido'] ?: '-') ?></td>
-                                    <td><?= esc($pedido['fecha_entrega'] ?: '-') ?></td>
-                                    <td><?= esc($pedido['forma_pago'] ?: '-') ?></td>
+                                    <td><?= esc($pedido['fecha_pedido'] ?? '-') ?></td>
+                                    <td><?= esc($pedido['fecha_entrega'] ?? '-') ?></td>
+                                    <td><?= esc($pedido['forma_pago'] ?? '-') ?></td>
                                     <td>
                                         <?php
                                             $estado = $pedido['estado'];

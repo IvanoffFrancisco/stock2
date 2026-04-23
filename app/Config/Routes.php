@@ -77,3 +77,7 @@ $routes->group('ventas', ['filter' => 'adminvendedor'], function($routes) {
     $routes->get('show/(:num)', 'Ventas::show/$1');
     $routes->get('pdf/(:num)', 'Ventas::pdf/$1');
 });
+
+$routes->group('metricas', ['filter' => 'admin'], function($routes) {
+    $routes->get('/', 'Metricas::index');
+});

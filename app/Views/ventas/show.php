@@ -26,7 +26,6 @@
             <p class="text-muted mb-0">Detalle completo de la venta</p>
         </div>
 
-        <!-- BOTONES -->
         <div class="d-flex gap-2">
             <a href="<?= base_url('ventas') ?>" class="btn btn-outline-secondary">
                 Volver
@@ -36,6 +35,10 @@
                 PDF
             </a>
         </div>
+    </div>
+
+    <div class="alert alert-info">
+        <strong>Importante:</strong> esta venta fue generada desde un pedido ya descontado. La venta no vuelve a mover stock.
     </div>
 
     <div class="row g-4">

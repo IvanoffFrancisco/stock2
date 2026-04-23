@@ -7,79 +7,82 @@ use App\Models\PedidoDetalleModel;
 use App\Models\ClienteModel;
 use App\Models\ProductoModel;
 use App\Models\PrecioProductoModel;
+use App\Models\MovimientoStockModel;
+use App\Models\VentaModel;
+use App\Models\VentaDetalleModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
 class Pedidos extends BaseController
 {
     public function index()
-{
-    $pedidoModel = new PedidoModel();
-    $rol = session('rol');
-    $usuarioId = session('id_usuario');
+    {
+        $pedidoModel = new PedidoModel();
+        $rol = session('rol');
+        $usuarioId = session('id_usuario');
 
-    $fechaDesde = $this->request->getGet('fecha_desde');
-    $fechaHasta = $this->request->getGet('fecha_hasta');
-    $cliente    = trim((string) $this->request->getGet('cliente'));
-    $vendedor   = $this->request->getGet('vendedor');
-    $estado     = $this->request->getGet('estado');
+        $fechaDesde = $this->request->getGet('fecha_desde');
+        $fechaHasta = $this->request->getGet('fecha_hasta');
+        $cliente    = trim((string) $this->request->getGet('cliente'));
+        $vendedor   = $this->request->getGet('vendedor');
+        $estado     = $this->request->getGet('estado');
 
-    $builder = $pedidoModel
-        ->select('pedidos.*, clientes.nombre AS cliente_nombre, usuarios.nombre AS vendedor_nombre')
-        ->join('clientes', 'clientes.id = pedidos.cliente_id')
-        ->join('usuarios', 'usuarios.id = pedidos.usuario_id');
+        $builder = $pedidoModel
+            ->select('pedidos.*, clientes.nombre AS cliente_nombre, usuarios.nombre AS vendedor_nombre')
+            ->join('clientes', 'clientes.id = pedidos.cliente_id')
+            ->join('usuarios', 'usuarios.id = pedidos.usuario_id');
 
-    if ($rol === 'vendedor') {
-        $builder->where('pedidos.usuario_id', $usuarioId);
+        if ($rol === 'vendedor') {
+            $builder->where('pedidos.usuario_id', $usuarioId);
+        }
+
+        if (!empty($fechaDesde)) {
+            $builder->where('pedidos.fecha_pedido >=', $fechaDesde);
+        }
+
+        if (!empty($fechaHasta)) {
+            $builder->where('pedidos.fecha_pedido <=', $fechaHasta);
+        }
+
+        if (!empty($cliente)) {
+            $builder->like('clientes.nombre', $cliente);
+        }
+
+        if ($rol === 'admin' && !empty($vendedor)) {
+            $builder->where('pedidos.usuario_id', $vendedor);
+        }
+
+        if (!empty($estado)) {
+            $builder->where('pedidos.estado', $estado);
+        }
+
+        $pedidos = $builder
+            ->orderBy('pedidos.id', 'DESC')
+            ->findAll();
+
+        $vendedores = [];
+        if ($rol === 'admin') {
+            $db = \Config\Database::connect();
+            $vendedores = $db->table('usuarios')
+                ->select('id, nombre')
+                ->where('rol', 'vendedor')
+                ->orderBy('nombre', 'ASC')
+                ->get()
+                ->getResultArray();
+        }
+
+        return view('pedidos/index', [
+            'pedidos'    => $pedidos,
+            'vendedores' => $vendedores,
+            'filtros'    => [
+                'fecha_desde' => $fechaDesde,
+                'fecha_hasta' => $fechaHasta,
+                'cliente'     => $cliente,
+                'vendedor'    => $vendedor,
+                'estado'      => $estado,
+            ],
+        ]);
     }
-
-    if (!empty($fechaDesde)) {
-        $builder->where('pedidos.fecha_pedido >=', $fechaDesde);
-    }
-
-    if (!empty($fechaHasta)) {
-        $builder->where('pedidos.fecha_pedido <=', $fechaHasta);
-    }
-
-    if (!empty($cliente)) {
-        $builder->like('clientes.nombre', $cliente);
-    }
-
-    if ($rol === 'admin' && !empty($vendedor)) {
-        $builder->where('pedidos.usuario_id', $vendedor);
-    }
-
-    if (!empty($estado)) {
-        $builder->where('pedidos.estado', $estado);
-    }
-
-    $pedidos = $builder
-        ->orderBy('pedidos.id', 'DESC')
-        ->findAll();
-
-    $vendedores = [];
-    if ($rol === 'admin') {
-        $db = \Config\Database::connect();
-        $vendedores = $db->table('usuarios')
-            ->select('id, nombre')
-            ->where('rol', 'vendedor')
-            ->orderBy('nombre', 'ASC')
-            ->get()
-            ->getResultArray();
-    }
-
-    return view('pedidos/index', [
-        'pedidos'     => $pedidos,
-        'vendedores'  => $vendedores,
-        'filtros'     => [
-            'fecha_desde' => $fechaDesde,
-            'fecha_hasta' => $fechaHasta,
-            'cliente'     => $cliente,
-            'vendedor'    => $vendedor,
-            'estado'      => $estado,
-        ],
-    ]);
-}
 
     public function create()
     {
@@ -140,6 +143,13 @@ class Pedidos extends BaseController
             return redirect()->back()->withInput()->with('error', $resultado['error']);
         }
 
+        if ($estado !== 'cancelado') {
+            $validacionStock = $this->validarStockDisponible($resultado['detalles']);
+            if (!$validacionStock['ok']) {
+                return redirect()->back()->withInput()->with('error', $validacionStock['error']);
+            }
+        }
+
         $pedidoModel        = new PedidoModel();
         $pedidoDetalleModel = new PedidoDetalleModel();
 
@@ -167,13 +177,68 @@ class Pedidos extends BaseController
             $pedidoDetalleModel->insert($detalle);
         }
 
+        if ($estado !== 'cancelado') {
+            $this->aplicarEgresoStockPorDetalles(
+                $resultado['detalles'],
+                'Pedido #' . $pedidoId,
+                'Creación de pedido'
+            );
+        }
+
+        if ($estado === 'entregado') {
+            $generacion = $this->generarVentaDesdePedido((int) $pedidoId);
+            if (!$generacion['ok']) {
+                $db->transRollback();
+                return redirect()->back()->withInput()->with('error', $generacion['error']);
+            }
+        }
+
         $db->transComplete();
 
         if ($db->transStatus() === false) {
             return redirect()->back()->withInput()->with('error', 'Ocurrió un error al guardar el pedido.');
         }
 
-        return redirect()->to('/pedidos')->with('success', 'Pedido creado correctamente.');
+        $mensaje = 'Pedido creado correctamente.';
+        $alertaStockBajo = $this->construirMensajeStockBajoDesdeDetalles($resultado['detalles']);
+        if ($alertaStockBajo !== '') {
+            $mensaje .= ' ' . $alertaStockBajo;
+        }
+
+        return redirect()->to('/pedidos')->with('success', $mensaje);
+    }
+
+    public function show($id = null)
+    {
+        $pedidoModel = new PedidoModel();
+        $pedidoDetalleModel = new PedidoDetalleModel();
+
+        $pedido = $pedidoModel
+            ->select('pedidos.*, clientes.nombre AS cliente_nombre, clientes.telefono, clientes.direccion, clientes.localidad, usuarios.nombre AS vendedor_nombre')
+            ->join('clientes', 'clientes.id = pedidos.cliente_id')
+            ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
+            ->where('pedidos.id', $id)
+            ->first();
+
+        if (!$pedido) {
+            return redirect()->to('/pedidos')->with('error', 'El pedido no existe.');
+        }
+
+        if (session('rol') === 'vendedor' && (int) $pedido['usuario_id'] !== (int) session('id_usuario')) {
+            return redirect()->to('/pedidos')->with('error', 'No tienes permisos para ver este pedido.');
+        }
+
+        $detalles = $pedidoDetalleModel
+            ->select('pedido_detalles.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
+            ->join('productos', 'productos.id = pedido_detalles.producto_id')
+            ->join('categorias', 'categorias.id = productos.categoria_id')
+            ->where('pedido_detalles.pedido_id', $id)
+            ->findAll();
+
+        return view('pedidos/show', [
+            'pedido'   => $pedido,
+            'detalles' => $detalles,
+        ]);
     }
 
     public function edit($id = null)
@@ -277,8 +342,26 @@ class Pedidos extends BaseController
             return redirect()->back()->withInput()->with('error', $resultado['error']);
         }
 
+        $detallesViejos = $pedidoDetalleModel->where('pedido_id', $id)->findAll();
+
         $db = \Config\Database::connect();
         $db->transStart();
+
+        if ($pedido['estado'] !== 'cancelado') {
+            $this->devolverStockPorDetalles(
+                $detallesViejos,
+                'Edición pedido #' . $id,
+                'Reversión stock'
+            );
+        }
+
+        if ($estado !== 'cancelado') {
+            $validacionStock = $this->validarStockDisponible($resultado['detalles']);
+            if (!$validacionStock['ok']) {
+                $db->transRollback();
+                return redirect()->back()->withInput()->with('error', $validacionStock['error']);
+            }
+        }
 
         $pedidoModel->update($id, [
             'cliente_id'     => $clienteId,
@@ -298,18 +381,44 @@ class Pedidos extends BaseController
             $pedidoDetalleModel->insert($detalle);
         }
 
+        if ($estado !== 'cancelado') {
+            $this->aplicarEgresoStockPorDetalles(
+                $resultado['detalles'],
+                'Edición pedido #' . $id,
+                'Nuevo stock'
+            );
+        }
+
+        if ($estado === 'entregado') {
+            $generacion = $this->generarVentaDesdePedido((int) $id);
+            if (!$generacion['ok']) {
+                $db->transRollback();
+                return redirect()->back()->withInput()->with('error', $generacion['error']);
+            }
+        }
+
         $db->transComplete();
 
         if ($db->transStatus() === false) {
             return redirect()->back()->withInput()->with('error', 'Ocurrió un error al actualizar el pedido.');
         }
 
-        return redirect()->to('/pedidos')->with('success', 'Pedido actualizado correctamente.');
+        $mensaje = 'Pedido actualizado correctamente.';
+        if ($estado !== 'cancelado') {
+            $alertaStockBajo = $this->construirMensajeStockBajoDesdeDetalles($resultado['detalles']);
+            if ($alertaStockBajo !== '') {
+                $mensaje .= ' ' . $alertaStockBajo;
+            }
+        }
+
+        return redirect()->to('/pedidos')->with('success', $mensaje);
     }
 
     public function cambiarEstado($id = null)
     {
         $pedidoModel = new PedidoModel();
+        $pedidoDetalleModel = new PedidoDetalleModel();
+
         $pedido = $pedidoModel->find($id);
 
         if (!$pedido) {
@@ -330,21 +439,86 @@ class Pedidos extends BaseController
             return redirect()->to('/pedidos')->with('error', 'El pedido ya fue entregado y no puede cambiarse.');
         }
 
+        $detalles = $pedidoDetalleModel->where('pedido_id', $id)->findAll();
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        if ($nuevoEstado === 'cancelado') {
+            if ($pedido['estado'] !== 'cancelado') {
+                $this->devolverStockPorDetalles(
+                    $detalles,
+                    'Cancelación pedido #' . $id,
+                    'Reversión total'
+                );
+            }
+
+            $pedidoModel->update($id, [
+                'estado' => 'cancelado',
+            ]);
+
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                return redirect()->to('/pedidos')->with('error', 'Ocurrió un error al cancelar el pedido.');
+            }
+
+            return redirect()->to('/pedidos')->with('success', 'Pedido cancelado correctamente.');
+        }
+
+        if ($nuevoEstado === 'pendiente') {
+            if ($pedido['estado'] === 'cancelado') {
+                $validacionStock = $this->validarStockDisponible($detalles);
+                if (!$validacionStock['ok']) {
+                    $db->transRollback();
+                    return redirect()->to('/pedidos')->with('error', $validacionStock['error']);
+                }
+
+                $this->aplicarEgresoStockPorDetalles(
+                    $detalles,
+                    'Reactivación pedido #' . $id,
+                    'Descuento al volver a pendiente'
+                );
+            }
+
+            $pedidoModel->update($id, [
+                'estado' => 'pendiente',
+            ]);
+
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                return redirect()->to('/pedidos')->with('error', 'Ocurrió un error al actualizar el pedido.');
+            }
+
+            $mensaje = 'Pedido actualizado correctamente.';
+            $alertaStockBajo = $this->construirMensajeStockBajoDesdeDetalles($detalles);
+            if ($alertaStockBajo !== '') {
+                $mensaje .= ' ' . $alertaStockBajo;
+            }
+
+            return redirect()->to('/pedidos')->with('success', $mensaje);
+        }
+
         if ($nuevoEstado === 'entregado') {
             $resultado = $this->generarVentaDesdePedido((int) $id);
 
             if (!$resultado['ok']) {
+                $db->transRollback();
                 return redirect()->to('/pedidos')->with('error', $resultado['error']);
             }
 
-            return redirect()->to('/pedidos')->with('success', 'Pedido entregado, venta generada y stock descontado correctamente.');
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                return redirect()->to('/pedidos')->with('error', 'Ocurrió un error al entregar el pedido.');
+            }
+
+            return redirect()->to('/pedidos')->with('success', 'Pedido entregado y venta generada correctamente.');
         }
 
-        $pedidoModel->update($id, [
-            'estado' => $nuevoEstado,
-        ]);
+        $db->transRollback();
 
-        return redirect()->to('/pedidos')->with('success', 'Estado del pedido actualizado correctamente.');
+        return redirect()->to('/pedidos')->with('error', 'No se pudo actualizar el estado.');
     }
 
     private function procesarDetallePedido(array $productoIds, array $cantidades, array $preciosUnitarios, array $bonificados): array
@@ -394,32 +568,176 @@ class Pedidos extends BaseController
         if (empty($detalles)) {
             return [
                 'ok' => false,
-                'error' => 'No se pudo generar el detalle del pedido.'
+                'error' => 'No se pudo generar el detalle del pedido.',
             ];
         }
 
         return [
-            'ok' => true,
+            'ok'       => true,
             'detalles' => $detalles,
             'subtotal' => $subtotalGeneral,
         ];
     }
 
+    private function validarStockDisponible(array $detalles): array
+    {
+        $productoModel = new ProductoModel();
+
+        foreach ($detalles as $detalle) {
+            if ((int) $detalle['bonificado'] === 1) {
+                continue;
+            }
+
+            $producto = $productoModel->find($detalle['producto_id']);
+
+            if (!$producto) {
+                return [
+                    'ok' => false,
+                    'error' => 'Uno de los productos ya no existe.',
+                ];
+            }
+
+            if ((int) $producto['stock_unidades'] < (int) $detalle['cantidad']) {
+                return [
+                    'ok' => false,
+                    'error' => 'Stock insuficiente para el producto: ' . $producto['nombre'],
+                ];
+            }
+        }
+
+        return ['ok' => true];
+    }
+
+    private function aplicarEgresoStockPorDetalles(array $detalles, string $motivo, string $observacion): void
+    {
+        $productoModel = new ProductoModel();
+        $movimientoStockModel = new MovimientoStockModel();
+
+        foreach ($detalles as $detalle) {
+            if ((int) $detalle['bonificado'] === 1) {
+                continue;
+            }
+
+            $producto = $productoModel->find($detalle['producto_id']);
+
+            if (!$producto) {
+                continue;
+            }
+
+            $nuevoStock = (int) $producto['stock_unidades'] - (int) $detalle['cantidad'];
+
+            $productoModel->update($detalle['producto_id'], [
+                'stock_unidades' => $nuevoStock,
+            ]);
+
+            $movimientoStockModel->insert([
+                'producto_id'     => $detalle['producto_id'],
+                'usuario_id'      => session('id_usuario'),
+                'tipo_movimiento' => 'egreso',
+                'cantidad'        => $detalle['cantidad'],
+                'motivo'          => $motivo,
+                'observacion'     => $observacion,
+                'created_at'      => date('Y-m-d H:i:s'),
+            ]);
+        }
+    }
+
+    private function devolverStockPorDetalles(array $detalles, string $motivo, string $observacion): void
+    {
+        $productoModel = new ProductoModel();
+        $movimientoStockModel = new MovimientoStockModel();
+
+        foreach ($detalles as $detalle) {
+            if ((int) $detalle['bonificado'] === 1) {
+                continue;
+            }
+
+            $producto = $productoModel->find($detalle['producto_id']);
+
+            if (!$producto) {
+                continue;
+            }
+
+            $nuevoStock = (int) $producto['stock_unidades'] + (int) $detalle['cantidad'];
+
+            $productoModel->update($detalle['producto_id'], [
+                'stock_unidades' => $nuevoStock,
+            ]);
+
+            $movimientoStockModel->insert([
+                'producto_id'     => $detalle['producto_id'],
+                'usuario_id'      => session('id_usuario'),
+                'tipo_movimiento' => 'ingreso',
+                'cantidad'        => $detalle['cantidad'],
+                'motivo'          => $motivo,
+                'observacion'     => $observacion,
+                'created_at'      => date('Y-m-d H:i:s'),
+            ]);
+        }
+    }
+
+    private function construirMensajeStockBajoDesdeDetalles(array $detalles): string
+    {
+        $productosBajo = $this->obtenerProductosConStockBajoDesdeDetalles($detalles);
+
+        if (empty($productosBajo)) {
+            return '';
+        }
+
+        $nombres = array_map(
+            static fn(array $item) => $item['nombre'] . ' (' . $item['stock'] . ')',
+            $productosBajo
+        );
+
+        return 'Atención: quedaron con stock bajo ' . implode(', ', $nombres) . '.';
+    }
+
+    private function obtenerProductosConStockBajoDesdeDetalles(array $detalles): array
+    {
+        $productoModel = new ProductoModel();
+        $ids = [];
+
+        foreach ($detalles as $detalle) {
+            $ids[(int) $detalle['producto_id']] = true;
+        }
+
+        $resultado = [];
+
+        foreach (array_keys($ids) as $productoId) {
+            $producto = $productoModel->find($productoId);
+
+            if (!$producto) {
+                continue;
+            }
+
+            $stockActual = (int) ($producto['stock_unidades'] ?? 0);
+            $stockMinimo = (int) ($producto['stock_minimo'] ?? 0);
+
+            if ($stockActual <= $stockMinimo) {
+                $resultado[] = [
+                    'id'    => $productoId,
+                    'nombre'=> $producto['nombre'],
+                    'stock' => $stockActual,
+                ];
+            }
+        }
+
+        return $resultado;
+    }
+
     private function generarVentaDesdePedido(int $pedidoId): array
     {
-        $pedidoModel          = new PedidoModel();
-        $pedidoDetalleModel   = new PedidoDetalleModel();
-        $ventaModel           = new \App\Models\VentaModel();
-        $ventaDetalleModel    = new \App\Models\VentaDetalleModel();
-        $productoModel        = new ProductoModel();
-        $movimientoStockModel = new \App\Models\MovimientoStockModel();
+        $pedidoModel        = new PedidoModel();
+        $pedidoDetalleModel = new PedidoDetalleModel();
+        $ventaModel         = new VentaModel();
+        $ventaDetalleModel  = new VentaDetalleModel();
 
         $pedido = $pedidoModel->find($pedidoId);
 
         if (!$pedido) {
             return [
                 'ok' => false,
-                'error' => 'El pedido no existe.'
+                'error' => 'El pedido no existe.',
             ];
         }
 
@@ -428,7 +746,7 @@ class Pedidos extends BaseController
         if ($ventaExistente) {
             return [
                 'ok' => false,
-                'error' => 'Este pedido ya generó una venta anteriormente.'
+                'error' => 'Este pedido ya generó una venta anteriormente.',
             ];
         }
 
@@ -437,37 +755,9 @@ class Pedidos extends BaseController
         if (empty($detalles)) {
             return [
                 'ok' => false,
-                'error' => 'El pedido no tiene detalle para generar la venta.'
+                'error' => 'El pedido no tiene detalle para generar la venta.',
             ];
         }
-
-        foreach ($detalles as $detalle) {
-            $producto = $productoModel->find($detalle['producto_id']);
-
-            if (!$producto) {
-                return [
-                    'ok' => false,
-                    'error' => 'Uno de los productos del pedido ya no existe.'
-                ];
-            }
-
-            $cantidad = (int) $detalle['cantidad'];
-            $bonificado = (int) $detalle['bonificado'];
-
-            if ($bonificado === 1) {
-                continue;
-            }
-
-            if ((int) $producto['stock_unidades'] < $cantidad) {
-                return [
-                    'ok' => false,
-                    'error' => 'No hay stock suficiente para entregar el producto: ' . $producto['nombre']
-                ];
-            }
-        }
-
-        $db = \Config\Database::connect();
-        $db->transStart();
 
         $ventaModel->insert([
             'pedido_id'       => $pedido['id'],
@@ -496,44 +786,14 @@ class Pedidos extends BaseController
                 'bonificado'        => $detalle['bonificado'],
                 'descripcion_extra' => $detalle['descripcion_extra'],
             ]);
-
-            $producto = $productoModel->find($detalle['producto_id']);
-            $cantidad = (int) $detalle['cantidad'];
-
-            if ((int) $detalle['bonificado'] !== 1) {
-                $nuevoStock = (int) $producto['stock_unidades'] - $cantidad;
-
-                $productoModel->update($detalle['producto_id'], [
-                    'stock_unidades' => $nuevoStock,
-                ]);
-
-                $movimientoStockModel->insert([
-                    'producto_id'     => $detalle['producto_id'],
-                    'usuario_id'      => session('id_usuario'),
-                    'tipo_movimiento' => 'egreso',
-                    'cantidad'        => $cantidad,
-                    'motivo'          => 'Venta generada desde pedido #' . $pedido['id'],
-                    'observacion'     => 'Venta #' . $ventaId,
-                    'created_at'      => date('Y-m-d H:i:s'),
-                ]);
-            }
         }
 
         $pedidoModel->update($pedidoId, [
             'estado' => 'entregado',
         ]);
 
-        $db->transComplete();
-
-        if ($db->transStatus() === false) {
-            return [
-                'ok' => false,
-                'error' => 'Ocurrió un error al generar la venta.'
-            ];
-        }
-
         return [
-            'ok' => true
+            'ok' => true,
         ];
     }
 
@@ -555,133 +815,102 @@ class Pedidos extends BaseController
 
         return 0;
     }
-    public function show($id = null)
-{
-    $pedidoModel = new PedidoModel();
-    $pedidoDetalleModel = new PedidoDetalleModel();
 
-    $pedido = $pedidoModel
-        ->select('pedidos.*, clientes.nombre AS cliente_nombre, clientes.telefono, clientes.direccion, clientes.localidad, usuarios.nombre AS vendedor_nombre')
-        ->join('clientes', 'clientes.id = pedidos.cliente_id')
-        ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
-        ->where('pedidos.id', $id)
-        ->first();
+    public function pdf($id = null)
+    {
+        ini_set('memory_limit', '1024M');
 
-    if (!$pedido) {
-        return redirect()->to('/pedidos')->with('error', 'El pedido no existe.');
+        $pedidoModel = new PedidoModel();
+        $pedidoDetalleModel = new PedidoDetalleModel();
+
+        $pedido = $pedidoModel
+            ->select('pedidos.*, clientes.nombre AS cliente_nombre, clientes.telefono, clientes.direccion, clientes.localidad, usuarios.nombre AS vendedor_nombre')
+            ->join('clientes', 'clientes.id = pedidos.cliente_id')
+            ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
+            ->where('pedidos.id', $id)
+            ->first();
+
+        if (!$pedido) {
+            return redirect()->to('/pedidos')->with('error', 'El pedido no existe.');
+        }
+
+        if (session('rol') === 'vendedor' && (int) $pedido['usuario_id'] !== (int) session('id_usuario')) {
+            return redirect()->to('/pedidos')->with('error', 'No tienes permisos para ver este pedido.');
+        }
+
+        $detalles = $pedidoDetalleModel
+            ->select('pedido_detalles.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
+            ->join('productos', 'productos.id = pedido_detalles.producto_id')
+            ->join('categorias', 'categorias.id = productos.categoria_id')
+            ->where('pedido_detalles.pedido_id', $id)
+            ->findAll();
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'Helvetica');
+        $options->setChroot(FCPATH);
+
+        $tempDir = WRITEPATH . 'dompdf';
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
+        $options->setTempDir($tempDir);
+
+        $dompdf = new Dompdf($options);
+
+        $html = view('pdf/remito', [
+            'tituloDocumento' => 'REMITO / PEDIDO',
+            'numeroDocumento' => str_pad((string) $pedido['id'], 6, '0', STR_PAD_LEFT),
+            'fechaDocumento'  => $pedido['fecha_pedido'] ?? date('Y-m-d'),
+            'fechaEntrega'    => $pedido['fecha_entrega'] ?? '-',
+            'formaPago'       => $pedido['forma_pago'] ?? '-',
+            'estado'          => ucfirst($pedido['estado'] ?? '-'),
+            'vendedorNombre'  => $pedido['vendedor_nombre'] ?? '-',
+            'cliente' => [
+                'nombre'    => $pedido['cliente_nombre'] ?? '-',
+                'telefono'  => $pedido['telefono'] ?? '-',
+                'direccion' => $pedido['direccion'] ?? '-',
+                'localidad' => $pedido['localidad'] ?? '-',
+            ],
+            'detalles'  => $detalles,
+            'subtotal'  => $pedido['subtotal'] ?? 0,
+            'descuento' => $pedido['descuento'] ?? 0,
+            'total'     => $pedido['total'] ?? 0,
+            'empresa'   => [
+                'nombre'    => 'GP',
+                'direccion' => 'Tu dirección',
+                'cuit'      => 'Tu CUIT',
+                'telefono'  => 'Tu teléfono',
+                'email'     => 'Tu email',
+            ],
+            'logoPath' => $this->obtenerLogoPdf(),
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'inline; filename="pedido-' . $pedido['id'] . '.pdf"')
+            ->setBody($dompdf->output());
     }
 
-    if (session('rol') === 'vendedor' && (int) $pedido['usuario_id'] !== (int) session('id_usuario')) {
-        return redirect()->to('/pedidos')->with('error', 'No tienes permisos para ver este pedido.');
+    private function obtenerLogoPdf(): string
+    {
+        $rutaLogo = FCPATH . 'img/logo-gp.png';
+
+        if (!is_file($rutaLogo)) {
+            return '';
+        }
+
+        $realPath = realpath($rutaLogo);
+
+        if ($realPath === false) {
+            return '';
+        }
+
+        return 'file:///' . str_replace('\\', '/', $realPath);
     }
-
-    $detalles = $pedidoDetalleModel
-        ->select('pedido_detalles.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
-        ->join('productos', 'productos.id = pedido_detalles.producto_id')
-        ->join('categorias', 'categorias.id = productos.categoria_id')
-        ->where('pedido_detalles.pedido_id', $id)
-        ->findAll();
-
-    return view('pedidos/show', [
-        'pedido'   => $pedido,
-        'detalles' => $detalles,
-    ]);
-}
-public function pdf($id = null)
-{
-    ini_set('memory_limit', '1024M');
-
-    $pedidoModel = new PedidoModel();
-    $pedidoDetalleModel = new PedidoDetalleModel();
-
-    $pedido = $pedidoModel
-        ->select('pedidos.*, clientes.nombre AS cliente_nombre, clientes.telefono, clientes.direccion, clientes.localidad, usuarios.nombre AS vendedor_nombre')
-        ->join('clientes', 'clientes.id = pedidos.cliente_id')
-        ->join('usuarios', 'usuarios.id = pedidos.usuario_id')
-        ->where('pedidos.id', $id)
-        ->first();
-
-    if (!$pedido) {
-        return redirect()->to('/pedidos')->with('error', 'El pedido no existe.');
-    }
-
-    if (session('rol') === 'vendedor' && (int) $pedido['usuario_id'] !== (int) session('id_usuario')) {
-        return redirect()->to('/pedidos')->with('error', 'No tienes permisos para ver este pedido.');
-    }
-
-    $detalles = $pedidoDetalleModel
-        ->select('pedido_detalles.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
-        ->join('productos', 'productos.id = pedido_detalles.producto_id')
-        ->join('categorias', 'categorias.id = productos.categoria_id')
-        ->where('pedido_detalles.pedido_id', $id)
-        ->findAll();
-
-    $options = new Options();
-    $options->set('isRemoteEnabled', true);
-    $options->set('defaultFont', 'Helvetica');
-    $options->setChroot(FCPATH);
-
-    $tempDir = WRITEPATH . 'dompdf';
-    if (!is_dir($tempDir)) {
-        mkdir($tempDir, 0777, true);
-    }
-
-    $options->setTempDir($tempDir);
-
-    $dompdf = new Dompdf($options);
-
-    $html = view('pdf/remito', [
-        'tituloDocumento' => 'REMITO / PEDIDO',
-        'numeroDocumento' => str_pad((string) $pedido['id'], 6, '0', STR_PAD_LEFT),
-        'fechaDocumento'  => $pedido['fecha_pedido'] ?? date('Y-m-d'),
-        'fechaEntrega'    => $pedido['fecha_entrega'] ?? '-',
-        'formaPago'       => $pedido['forma_pago'] ?? '-',
-        'estado'          => ucfirst($pedido['estado'] ?? '-'),
-        'vendedorNombre'  => $pedido['vendedor_nombre'] ?? '-',
-        'cliente' => [
-            'nombre'    => $pedido['cliente_nombre'] ?? '-',
-            'telefono'  => $pedido['telefono'] ?? '-',
-            'direccion' => $pedido['direccion'] ?? '-',
-            'localidad' => $pedido['localidad'] ?? '-',
-        ],
-        'detalles'  => $detalles,
-        'subtotal'  => $pedido['subtotal'] ?? 0,
-        'descuento' => $pedido['descuento'] ?? 0,
-        'total'     => $pedido['total'] ?? 0,
-        'empresa'   => [
-            'nombre'    => 'GP',
-            'direccion' => 'Tu dirección',
-            'cuit'      => 'Tu CUIT',
-            'telefono'  => 'Tu teléfono',
-            'email'     => 'Tu email',
-        ],
-        'logoPath' => $this->obtenerLogoPdf(),
-    ]);
-
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'portrait');
-    $dompdf->render();
-
-    return $this->response
-        ->setHeader('Content-Type', 'application/pdf')
-        ->setHeader('Content-Disposition', 'inline; filename="pedido-' . $pedido['id'] . '.pdf"')
-        ->setBody($dompdf->output());
-}
-private function obtenerLogoPdf(): string
-{
-    $rutaLogo = FCPATH . 'img/logo-gp.png';
-
-    if (!is_file($rutaLogo)) {
-        return '';
-    }
-
-    $realPath = realpath($rutaLogo);
-
-    if ($realPath === false) {
-        return '';
-    }
-
-    return 'file:///' . str_replace('\\', '/', $realPath);
-}
-
 }

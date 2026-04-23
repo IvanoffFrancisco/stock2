@@ -1,3 +1,15 @@
+<?php
+$db = \Config\Database::connect();
+
+$productosStockBajo = $db->table('productos')
+    ->where('stock_unidades <= stock_minimo')
+    ->where('stock_unidades >', 0)
+    ->countAllResults();
+
+$productosSinStock = $db->table('productos')
+    ->where('stock_unidades <=', 0)
+    ->countAllResults();
+?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -207,6 +219,19 @@
         </div>
     <?php endif; ?>
 
+    <?php if (session('rol') === 'admin' && ($productosStockBajo > 0 || $productosSinStock > 0)): ?>
+        <div class="alert alert-warning mb-4">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            <?php if ($productosSinStock > 0): ?>
+                Hay <strong><?= esc($productosSinStock) ?></strong> producto(s) sin stock.
+            <?php endif; ?>
+            <?php if ($productosStockBajo > 0): ?>
+                <?= $productosSinStock > 0 ? ' Además,' : 'Hay' ?>
+                <strong><?= esc($productosStockBajo) ?></strong> producto(s) con stock bajo.
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
     <div class="hero-card p-4 p-lg-5 mb-4">
         <div class="row g-4 align-items-center position-relative" style="z-index: 1;">
             <div class="col-lg-8">
@@ -353,6 +378,45 @@
                         <p class="card-text">Consulta las ventas generadas a partir de pedidos entregados.</p>
                         <a href="<?= base_url('ventas') ?>" class="btn btn-primary btn-soft w-100">
                             <i class="bi bi-arrow-right-circle me-1"></i>Ir a ventas
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <div class="card-icon icon-warning"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                        <h5 class="card-title">Stock bajo</h5>
+                        <p class="card-text">Productos que están en el límite o por debajo del stock mínimo.</p>
+                        <a href="<?= base_url('productos') ?>" class="btn btn-warning btn-soft w-100 text-dark">
+                            <i class="bi bi-box2-heart me-1"></i><?= esc($productosStockBajo) ?> producto(s)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <div class="card-icon icon-danger"><i class="bi bi-x-octagon-fill"></i></div>
+                        <h5 class="card-title">Sin stock</h5>
+                        <p class="card-text">Productos agotados que requieren reposición urgente.</p>
+                        <a href="<?= base_url('productos') ?>" class="btn btn-danger btn-soft w-100">
+                            <i class="bi bi-box-seam me-1"></i><?= esc($productosSinStock) ?> producto(s)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <div class="dashboard-card">
+                    <div class="card-body">
+                        <div class="card-icon icon-primary"><i class="bi bi-bar-chart-line-fill"></i></div>
+                        <h5 class="card-title">Métricas</h5>
+                        <p class="card-text">Accedé al dashboard analítico de ventas, vendedores y evolución comercial.</p>
+                        <a href="<?= base_url('metricas') ?>" class="btn btn-primary btn-soft w-100">
+                            <i class="bi bi-arrow-right-circle me-1"></i>Ir a métricas
                         </a>
                     </div>
                 </div>

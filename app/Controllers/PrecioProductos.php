@@ -10,17 +10,42 @@ class PrecioProductos extends BaseController
     public function index()
     {
         $precioProductoModel = new PrecioProductoModel();
+        $productoModel = new ProductoModel();
 
-        $precios = $precioProductoModel
-            ->select('precio_productos.*, productos.nombre AS producto_nombre, productos.kilogramos, categorias.nombre AS categoria_nombre')
+        $buscar = trim((string) $this->request->getGet('buscar'));
+        $molino = trim((string) $this->request->getGet('molino'));
+
+        $builder = $precioProductoModel
+            ->select('precio_productos.*, productos.nombre AS producto_nombre, productos.kilogramos, productos.molino, categorias.nombre AS categoria_nombre')
             ->join('productos', 'productos.id = precio_productos.producto_id')
-            ->join('categorias', 'categorias.id = productos.categoria_id')
+            ->join('categorias', 'categorias.id = productos.categoria_id');
+
+        if ($buscar !== '') {
+            $builder->like('productos.nombre', $buscar);
+        }
+
+        if ($molino !== '') {
+            $builder->where('productos.molino', $molino);
+        }
+
+        $precios = $builder
             ->orderBy('productos.nombre', 'ASC')
             ->orderBy('precio_productos.cantidad_desde', 'ASC')
             ->findAll();
 
+        $molinos = $productoModel
+            ->select('molino')
+            ->where('molino IS NOT NULL')
+            ->where('molino !=', '')
+            ->groupBy('molino')
+            ->orderBy('molino', 'ASC')
+            ->findAll();
+
         return view('precio_productos/index', [
             'precios' => $precios,
+            'buscar'  => $buscar,
+            'molino'  => $molino,
+            'molinos' => $molinos,
         ]);
     }
 

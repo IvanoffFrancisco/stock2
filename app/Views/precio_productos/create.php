@@ -74,7 +74,7 @@
                                 <option value="">Seleccionar producto</option>
                                 <?php foreach ($productos as $producto): ?>
                                     <option value="<?= esc($producto['id']) ?>" <?= (string)$productoSeleccionado === (string)$producto['id'] ? 'selected' : '' ?>>
-                                        <?= esc($producto['nombre']) ?> - <?= esc($producto['kilogramos']) ?> kg (<?= esc($producto['categoria_nombre']) ?>)
+                                        <?= esc($producto['nombre']) ?> - <?= esc($producto['kilogramos']) ?> kg - Molino: <?= esc($producto['molino'] ?? '-') ?> (<?= esc($producto['categoria_nombre']) ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>

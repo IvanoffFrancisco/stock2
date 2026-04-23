@@ -32,10 +32,19 @@
                 PDF
             </a>
 
-            <?php if ($pedido['estado'] !== 'entregado'): ?>
+            <?php if (($pedido['estado'] ?? '') !== 'entregado'): ?>
                 <a href="<?= base_url('pedidos/edit/' . $pedido['id']) ?>" class="btn btn-primary">Editar</a>
             <?php endif; ?>
         </div>
+    </div>
+
+    <div class="alert alert-info">
+        <strong>Stock:</strong>
+        <?php if (($pedido['estado'] ?? '') === 'cancelado'): ?>
+            este pedido está cancelado, por lo tanto su stock fue devuelto.
+        <?php else: ?>
+            este pedido ya reservó/descontó stock.
+        <?php endif; ?>
     </div>
 
     <div class="row g-4">

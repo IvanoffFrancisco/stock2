@@ -89,6 +89,10 @@
         </div>
     </div>
 
+    <div class="alert alert-info">
+        <strong>Importante:</strong> las ventas se generan desde pedidos ya descontados. Esta pantalla no realiza movimientos de stock; solo refleja pedidos entregados transformados en venta.
+    </div>
+
     <?php if (session()->getFlashdata('success')): ?>
         <div class="alert alert-success">
             <?= session()->getFlashdata('success') ?>
@@ -146,9 +150,14 @@
                                     <td>$ <?= number_format((float) $venta['descuento'], 2, ',', '.') ?></td>
                                     <td>$ <?= number_format((float) $venta['total'], 2, ',', '.') ?></td>
                                     <td>
-                                        <a href="<?= base_url('ventas/show/' . $venta['id']) ?>" class="btn btn-sm btn-outline-dark">
-                                            Ver
-                                        </a>
+                                        <div class="d-flex flex-column gap-2">
+                                            <a href="<?= base_url('ventas/show/' . $venta['id']) ?>" class="btn btn-sm btn-outline-dark">
+                                                Ver
+                                            </a>
+                                            <a href="<?= base_url('ventas/pdf/' . $venta['id']) ?>" target="_blank" class="btn btn-sm btn-outline-danger">
+                                                PDF
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

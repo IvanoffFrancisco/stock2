@@ -20,6 +20,7 @@ class ProductoModel extends Model
         'kilogramos',
         'bolsas_por_pallet',
         'stock_unidades',
+        'stock_minimo',
         'created_at',
     ];
 

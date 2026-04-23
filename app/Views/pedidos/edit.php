@@ -29,6 +29,11 @@
                 <a href="<?= base_url('pedidos') ?>" class="btn btn-outline-secondary">Volver</a>
             </div>
 
+            <div class="alert alert-warning">
+                <strong>Importante:</strong>
+                al actualizar este pedido, el sistema devuelve el stock del detalle anterior y vuelve a aplicar el stock del nuevo detalle, salvo que el pedido quede <strong>cancelado</strong>.
+            </div>
+
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger">
                     <?= session()->getFlashdata('error') ?>
@@ -89,6 +94,7 @@
                         <label for="estado" class="form-label">Estado</label>
                         <select class="form-select" id="estado" name="estado">
                             <option value="pendiente" <?= old('estado', $pedido['estado']) === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                            <option value="entregado" <?= old('estado', $pedido['estado']) === 'entregado' ? 'selected' : '' ?>>Entregado</option>
                             <option value="cancelado" <?= old('estado', $pedido['estado']) === 'cancelado' ? 'selected' : '' ?>>Cancelado</option>
                         </select>
                     </div>
