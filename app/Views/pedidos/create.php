@@ -114,6 +114,18 @@
                             value="<?= old('descuento', 0) ?>"
                         >
                     </div>
+
+                    <div class="col-md-3 mb-4">
+                        <label for="lista_precio" class="form-label">Lista</label>
+                        <select class="form-select" id="lista_precio" name="lista_precio">
+                            <?php foreach (($listasPrecios ?? ['General']) as $lista): ?>
+                                <option value="<?= esc($lista) ?>" <?= (old('lista_precio', $listasPrecios[0] ?? 'General') === $lista) ? 'selected' : '' ?>>
+                                    <?= esc($lista) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="form-text">Se usa si el precio queda en 0.</div>
+                    </div>
                 </div>
 
                 <hr class="my-4">
@@ -153,8 +165,8 @@
                                     <input type="number" name="cantidad[]" class="form-control cantidad-input" min="1" value="1" required>
                                 </td>
                                 <td>
-                                    <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="0">
-                                    <div class="form-text">0 = usar después el precio sugerido</div>
+                                    <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="0.00" data-manual="0">
+                                    <div class="form-text">0 = usar precio de la lista seleccionada</div>
                                 </td>
                                 <td class="text-center">
                                     <input type="checkbox" name="bonificado[0]" class="form-check-input bonificado-input">
@@ -188,7 +200,7 @@
                                 <h5 class="card-title">Resumen</h5>
                                 <p class="mb-2">Subtotal estimado: <strong id="subtotalGeneral">$ 0,00</strong></p>
                                 <p class="mb-0">Total estimado: <strong id="totalGeneral">$ 0,00</strong></p>
-                                <small class="text-muted">El precio automático real se aplica en el backend si dejás precio en 0.</small>
+                                <small class="text-muted">Si escribís un precio manual, se usa ese precio. Si queda en 0, se usa el precio de la lista seleccionada.</small>
                             </div>
                         </div>
                     </div>
@@ -203,6 +215,8 @@
 </div>
 
 <script>
+window.preciosProducto = <?= json_encode($preciosProducto ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+
 const productosHtml = `
 <option value="">Seleccionar producto</option>
 <?php foreach ($productos as $producto): ?>
@@ -214,6 +228,37 @@ const productosHtml = `
 
 let bonificadoIndex = 1;
 
+function normalizarNumero(valor) {
+    if (valor === null || valor === undefined || valor === '') return 0;
+    return parseFloat(String(valor).replace(',', '.')) || 0;
+}
+
+function formatearMoneda(valor) {
+    return '$ ' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function obtenerListaSeleccionada() {
+    const select = document.getElementById('lista_precio');
+    return select ? select.value : 'General';
+}
+
+function obtenerPrecioDesdeLista(productoId, lista) {
+    const precios = window.preciosProducto || {};
+    const productoKey = String(productoId || '');
+    const listaKey = String(lista || 'General');
+
+    if (!productoKey || !precios[productoKey] || !precios[productoKey][listaKey]) {
+        return 0;
+    }
+
+    const preciosLista = precios[productoKey][listaKey];
+    if (!Array.isArray(preciosLista) || preciosLista.length === 0) {
+        return 0;
+    }
+
+    return normalizarNumero(preciosLista[0].precio || 0);
+}
+
 function recalcularTotales() {
     let subtotalGeneral = 0;
     const filas = document.querySelectorAll('#tablaDetalle tbody tr');
@@ -224,21 +269,71 @@ function recalcularTotales() {
         const bonificadoInput = fila.querySelector('.bonificado-input');
         const subtotalLineaInput = fila.querySelector('.subtotal-linea');
 
-        const cantidad = parseFloat(cantidadInput.value || 0);
-        const precio = parseFloat(precioInput.value || 0);
+        const cantidad = normalizarNumero(cantidadInput.value);
+        const precio = normalizarNumero(precioInput.value);
         const bonificado = bonificadoInput.checked;
-
         const subtotal = bonificado ? 0 : (cantidad * precio);
 
         subtotalLineaInput.value = subtotal.toFixed(2);
         subtotalGeneral += subtotal;
     });
 
-    const descuento = parseFloat(document.getElementById('descuento').value || 0);
+    const descuento = normalizarNumero(document.getElementById('descuento').value);
     const totalGeneral = Math.max(0, subtotalGeneral - descuento);
 
-    document.getElementById('subtotalGeneral').textContent = '$ ' + subtotalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('totalGeneral').textContent = '$ ' + totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('subtotalGeneral').textContent = formatearMoneda(subtotalGeneral);
+    document.getElementById('totalGeneral').textContent = formatearMoneda(totalGeneral);
+}
+
+function autocompletarPrecioFila(fila, forzar = false) {
+    if (!fila) return;
+
+    const productoSelect = fila.querySelector('.producto-select');
+    const precioInput = fila.querySelector('.precio-input');
+    const bonificadoInput = fila.querySelector('.bonificado-input');
+
+    if (!productoSelect || !precioInput) return;
+
+    if (bonificadoInput && bonificadoInput.checked) {
+        precioInput.value = '0.00';
+        precioInput.dataset.manual = '0';
+        recalcularTotales();
+        return;
+    }
+
+    const productoId = productoSelect.value;
+    const lista = obtenerListaSeleccionada();
+    const precioActual = normalizarNumero(precioInput.value);
+    const fueManual = precioInput.dataset.manual === '1';
+
+    // Si el usuario escribió un precio manual mayor a 0, se respeta y no se usa la lista.
+    if (!forzar && fueManual && precioActual > 0) {
+        recalcularTotales();
+        return;
+    }
+
+    // Si se fuerza por cambio de lista/producto, solo cambiamos filas automáticas o en 0.
+    if (forzar && fueManual && precioActual > 0) {
+        recalcularTotales();
+        return;
+    }
+
+    if (!productoId) {
+        recalcularTotales();
+        return;
+    }
+
+    const precioLista = obtenerPrecioDesdeLista(productoId, lista);
+    precioInput.value = precioLista > 0 ? precioLista.toFixed(2) : '0.00';
+    precioInput.dataset.manual = '0';
+
+    recalcularTotales();
+}
+
+function autocompletarTodasLasFilas(forzar = false) {
+    document.querySelectorAll('#tablaDetalle tbody tr').forEach((fila) => {
+        autocompletarPrecioFila(fila, forzar);
+    });
 }
 
 document.getElementById('agregarFila').addEventListener('click', function () {
@@ -255,8 +350,8 @@ document.getElementById('agregarFila').addEventListener('click', function () {
             <input type="number" name="cantidad[]" class="form-control cantidad-input" min="1" value="1" required>
         </td>
         <td>
-            <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="0">
-            <div class="form-text">0 = usar después el precio sugerido</div>
+            <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="0.00" data-manual="0">
+            <div class="form-text">0 = usar precio de la lista seleccionada</div>
         </td>
         <td class="text-center">
             <input type="checkbox" name="bonificado[${bonificadoIndex}]" class="form-check-input bonificado-input">
@@ -275,18 +370,44 @@ document.getElementById('agregarFila').addEventListener('click', function () {
 });
 
 document.addEventListener('input', function (e) {
-    if (
-        e.target.classList.contains('cantidad-input') ||
-        e.target.classList.contains('precio-input') ||
-        e.target.id === 'descuento'
-    ) {
+    if (e.target.classList.contains('precio-input')) {
+        const valor = normalizarNumero(e.target.value);
+        e.target.dataset.manual = valor > 0 ? '1' : '0';
+
+        if (valor <= 0) {
+            autocompletarPrecioFila(e.target.closest('tr'), true);
+            return;
+        }
+
+        recalcularTotales();
+        return;
+    }
+
+    if (e.target.classList.contains('cantidad-input') || e.target.id === 'descuento') {
+        // La cantidad no decide la lista; solo recalcula el subtotal con el precio actual.
         recalcularTotales();
     }
 });
 
 document.addEventListener('change', function (e) {
+    if (e.target.id === 'lista_precio') {
+        autocompletarTodasLasFilas(true);
+        return;
+    }
+
+    if (e.target.classList.contains('producto-select')) {
+        const fila = e.target.closest('tr');
+        const precioInput = fila.querySelector('.precio-input');
+        if (precioInput) {
+            precioInput.value = '0.00';
+            precioInput.dataset.manual = '0';
+        }
+        autocompletarPrecioFila(fila, true);
+        return;
+    }
+
     if (e.target.classList.contains('bonificado-input')) {
-        recalcularTotales();
+        autocompletarPrecioFila(e.target.closest('tr'), true);
     }
 });
 
@@ -300,7 +421,14 @@ document.addEventListener('click', function (e) {
     }
 });
 
-recalcularTotales();
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.precio-input').forEach((input) => {
+        input.dataset.manual = normalizarNumero(input.value) > 0 ? '1' : '0';
+    });
+
+    autocompletarTodasLasFilas(false);
+    recalcularTotales();
+});
 </script>
 
 </body>

@@ -15,6 +15,7 @@ class PedidoModel extends Model
     protected $allowedFields = [
         'cliente_id',
         'usuario_id',
+        'lista_precio',
         'fecha_pedido',
         'fecha_entrega',
         'forma_pago',

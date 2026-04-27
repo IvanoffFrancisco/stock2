@@ -22,7 +22,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h1 class="h3 mb-1">Precios de productos</h1>
-            <p class="text-muted mb-0">Precios por rango de cantidad de bolsas</p>
+            <p class="text-muted mb-0">Precios por lista y rango de cantidad de bolsas</p>
         </div>
         <div class="d-flex gap-2">
             <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">Volver</a>
@@ -92,6 +92,7 @@
                         <tr>
                             <th class="px-4 py-3">ID</th>
                             <th class="py-3">Producto</th>
+                            <th class="py-3">Lista</th>
                             <th class="py-3">Molino</th>
                             <th class="py-3">Categoría</th>
                             <th class="py-3">Kg</th>
@@ -108,6 +109,11 @@
                                 <tr>
                                     <td class="px-4"><?= esc($precio['id']) ?></td>
                                     <td><?= esc($precio['producto_nombre']) ?></td>
+                                    <td>
+                                        <span class="badge text-bg-primary">
+                                            <?= esc($precio['lista'] ?? 'General') ?>
+                                        </span>
+                                    </td>
                                     <td><?= esc($precio['molino'] ?? '-') ?></td>
                                     <td><?= esc($precio['categoria_nombre']) ?></td>
                                     <td><?= esc($precio['kilogramos']) ?></td>
@@ -128,7 +134,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center py-4">
+                                <td colspan="11" class="text-center py-4">
                                     No se encontraron precios con los filtros aplicados.
                                 </td>
                             </tr>

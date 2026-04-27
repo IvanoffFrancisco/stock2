@@ -157,10 +157,10 @@
                             </td>
                             <td>
                                 <div style="font-size:18px; font-weight:bold;"><?= esc($empresa['nombre']) ?></div>
-                                <div class="small"><?= esc($empresa['direccion']) ?></div>
-                                <div class="small">CUIT: <?= esc($empresa['cuit']) ?></div>
-                                <div class="small">Tel: <?= esc($empresa['telefono']) ?></div>
-                                <div class="small">Email: <?= esc($empresa['email']) ?></div>
+                                <div class="small">Brown 3572-Resistencia, Chaco</div>
+                                <div class="small">CUIT: 20146322647</div>
+                                <div class="small">Tel: 3624-783333</div>
+                                <div class="small">Email:</div>
                             </td>
                         </tr>
                     </table>

@@ -14,6 +14,7 @@ class PrecioProductoModel extends Model
 
     protected $allowedFields = [
         'producto_id',
+        'lista',
         'cantidad_desde',
         'cantidad_hasta',
         'precio_unitario',
