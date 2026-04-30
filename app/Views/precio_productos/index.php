@@ -19,13 +19,27 @@
 </nav>
 
 <div class="container py-5">
+    <?php
+        $filtrosPdf = array_filter([
+            'buscar'       => $buscar ?? '',
+            'molino'       => $molino ?? '',
+            'categoria_id' => $categoriaId ?? '',
+        ], static fn ($valor) => $valor !== '');
+
+        $urlPdf = base_url('precio-productos/pdf');
+        if (!empty($filtrosPdf)) {
+            $urlPdf .= '?' . http_build_query($filtrosPdf);
+        }
+    ?>
+
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h1 class="h3 mb-1">Precios de productos</h1>
-            <p class="text-muted mb-0">Precios por rango de cantidad de bolsas</p>
+            <p class="text-muted mb-0">Precios por rango de cantidad de bolsas para consulta y exportaciÃ³n.</p>
         </div>
         <div class="d-flex gap-2">
             <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">Volver</a>
+            <a href="<?= esc($urlPdf, 'attr') ?>" target="_blank" class="btn btn-outline-danger">Exportar PDF</a>
 
             <?php if (session('rol') === 'admin'): ?>
                 <a href="<?= base_url('precio-productos/create') ?>" class="btn btn-primary">Nuevo precio</a>
@@ -49,8 +63,8 @@
         <div class="card-body p-4">
             <form action="<?= base_url('precio-productos') ?>" method="get">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label for="buscar" class="form-label fw-semibold">Buscar por nombre de producto</label>
+                    <div class="col-lg-4 col-md-6">
+                        <label for="buscar" class="form-label fw-semibold">Producto</label>
                         <input
                             type="text"
                             class="form-control"
@@ -61,8 +75,8 @@
                         >
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="molino" class="form-label fw-semibold">Filtrar por molino</label>
+                    <div class="col-lg-3 col-md-6">
+                        <label for="molino" class="form-label fw-semibold">Molino</label>
                         <select class="form-select" id="molino" name="molino">
                             <option value="">Todos los molinos</option>
                             <?php foreach (($molinos ?? []) as $item): ?>
@@ -73,7 +87,19 @@
                         </select>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6">
+                        <label for="categoria_id" class="form-label fw-semibold">CategorÃ­a</label>
+                        <select class="form-select" id="categoria_id" name="categoria_id">
+                            <option value="">Todas las categorÃ­as</option>
+                            <?php foreach (($categorias ?? []) as $categoria): ?>
+                                <option value="<?= esc($categoria['id']) ?>" <?= ((string) ($categoriaId ?? '') === (string) $categoria['id']) ? 'selected' : '' ?>>
+                                    <?= esc($categoria['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
                         <div class="d-grid gap-2 d-md-flex">
                             <button type="submit" class="btn btn-dark flex-fill">Buscar</button>
                             <a href="<?= base_url('precio-productos') ?>" class="btn btn-outline-secondary flex-fill">Limpiar</a>
@@ -85,7 +111,16 @@
     </div>
 
     <div class="card border-0 shadow rounded-4">
-        <div class="card-body p-0">
+        <div class="card-header bg-white border-0 px-4 pt-4 pb-0">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h2 class="h5 mb-1">Lista de precios</h2>
+                    <p class="text-muted mb-0"><?= count($precios ?? []) ?> registros encontrados</p>
+                </div>
+                <a href="<?= esc($urlPdf, 'attr') ?>" target="_blank" class="btn btn-sm btn-outline-danger">PDF con filtros actuales</a>
+            </div>
+        </div>
+        <div class="card-body p-0 pt-3">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-dark">
@@ -107,13 +142,13 @@
                             <?php foreach ($precios as $precio): ?>
                                 <tr>
                                     <td class="px-4"><?= esc($precio['id']) ?></td>
-                                    <td><?= esc($precio['producto_nombre']) ?></td>
+                                    <td class="fw-semibold"><?= esc($precio['producto_nombre']) ?></td>
                                     <td><?= esc($precio['molino'] ?? '-') ?></td>
                                     <td><?= esc($precio['categoria_nombre']) ?></td>
                                     <td><?= esc($precio['kilogramos']) ?></td>
                                     <td><?= esc($precio['cantidad_desde']) ?></td>
                                     <td><?= esc($precio['cantidad_hasta'] ?? 'Sin límite') ?></td>
-                                    <td>$ <?= number_format((float) $precio['precio_unitario'], 2, ',', '.') ?></td>
+                                    <td class="fw-semibold">$ <?= number_format((float) $precio['precio_unitario'], 2, ',', '.') ?></td>
                                     <td><?= esc($precio['created_at']) ?></td>
                                     <td class="text-center">
                                         <?php if (session('rol') === 'admin'): ?>

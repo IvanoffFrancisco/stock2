@@ -41,6 +41,7 @@ $routes->group('productos', ['filter' => 'adminvendedor'], function($routes) {
 
 $routes->group('precio-productos', ['filter' => 'adminvendedor'], function($routes) {
     $routes->get('/', 'PrecioProductos::index');
+    $routes->get('pdf', 'PrecioProductos::pdf');
     $routes->get('create', 'PrecioProductos::create');
     $routes->post('store', 'PrecioProductos::store');
     $routes->get('edit/(:num)', 'PrecioProductos::edit/$1');

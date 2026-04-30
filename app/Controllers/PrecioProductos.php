@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 use App\Models\PrecioProductoModel;
 use App\Models\ProductoModel;
+use App\Models\CategoriaModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PrecioProductos extends BaseController
 {
@@ -11,27 +14,13 @@ class PrecioProductos extends BaseController
     {
         $precioProductoModel = new PrecioProductoModel();
         $productoModel = new ProductoModel();
+        $categoriaModel = new CategoriaModel();
 
         $buscar = trim((string) $this->request->getGet('buscar'));
         $molino = trim((string) $this->request->getGet('molino'));
+        $categoriaId = trim((string) $this->request->getGet('categoria_id'));
 
-        $builder = $precioProductoModel
-            ->select('precio_productos.*, productos.nombre AS producto_nombre, productos.kilogramos, productos.molino, categorias.nombre AS categoria_nombre')
-            ->join('productos', 'productos.id = precio_productos.producto_id')
-            ->join('categorias', 'categorias.id = productos.categoria_id');
-
-        if ($buscar !== '') {
-            $builder->like('productos.nombre', $buscar);
-        }
-
-        if ($molino !== '') {
-            $builder->where('productos.molino', $molino);
-        }
-
-        $precios = $builder
-            ->orderBy('productos.nombre', 'ASC')
-            ->orderBy('precio_productos.cantidad_desde', 'ASC')
-            ->findAll();
+        $precios = $this->obtenerPreciosFiltrados($precioProductoModel, $buscar, $molino, $categoriaId);
 
         $molinos = $productoModel
             ->select('molino')
@@ -41,12 +30,69 @@ class PrecioProductos extends BaseController
             ->orderBy('molino', 'ASC')
             ->findAll();
 
+        $categorias = $categoriaModel
+            ->orderBy('nombre', 'ASC')
+            ->findAll();
+
         return view('precio_productos/index', [
-            'precios' => $precios,
-            'buscar'  => $buscar,
-            'molino'  => $molino,
-            'molinos' => $molinos,
+            'precios'     => $precios,
+            'buscar'      => $buscar,
+            'molino'      => $molino,
+            'categoriaId' => $categoriaId,
+            'molinos'     => $molinos,
+            'categorias'  => $categorias,
         ]);
+    }
+
+    public function pdf()
+    {
+        ini_set('memory_limit', '512M');
+
+        $precioProductoModel = new PrecioProductoModel();
+        $categoriaModel = new CategoriaModel();
+
+        $buscar = trim((string) $this->request->getGet('buscar'));
+        $molino = trim((string) $this->request->getGet('molino'));
+        $categoriaId = trim((string) $this->request->getGet('categoria_id'));
+
+        $precios = $this->obtenerPreciosFiltrados($precioProductoModel, $buscar, $molino, $categoriaId);
+        $categoriaSeleccionada = $categoriaId !== '' ? $categoriaModel->find($categoriaId) : null;
+        $preciosAgrupados = $this->prepararPreciosParaPdf($precios);
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', false);
+        $options->set('defaultFont', 'Helvetica');
+        $options->setChroot(FCPATH);
+
+        $tempDir = WRITEPATH . 'dompdf';
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
+        $options->setTempDir($tempDir);
+
+        $dompdf = new Dompdf($options);
+
+        $html = view('pdf/lista_precios', [
+            'preciosAgrupados' => $preciosAgrupados,
+            'filtros' => [
+                'buscar'    => $buscar,
+                'molino'    => $molino,
+                'categoria' => $categoriaSeleccionada['nombre'] ?? '',
+            ],
+            'fechaDocumento' => date('d/m/Y'),
+            'empresaNombre'   => 'GP',
+            'logoPath'        => $this->obtenerLogoListaPrecios(),
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'inline; filename="lista-precios.pdf"')
+            ->setBody($dompdf->output());
     }
 
     public function create()
@@ -214,5 +260,116 @@ class PrecioProductos extends BaseController
         ]);
 
         return redirect()->to('/precio-productos')->with('success', 'Precio actualizado correctamente.');
+    }
+
+    private function obtenerPreciosFiltrados(PrecioProductoModel $precioProductoModel, string $buscar, string $molino, string $categoriaId): array
+    {
+        $builder = $precioProductoModel
+            ->select('precio_productos.*, productos.nombre AS producto_nombre, productos.kilogramos, productos.molino, categorias.nombre AS categoria_nombre, categorias.id AS categoria_id')
+            ->join('productos', 'productos.id = precio_productos.producto_id')
+            ->join('categorias', 'categorias.id = productos.categoria_id');
+
+        if ($buscar !== '') {
+            $builder->like('productos.nombre', $buscar);
+        }
+
+        if ($molino !== '') {
+            $builder->where('productos.molino', $molino);
+        }
+
+        if ($categoriaId !== '') {
+            $builder->where('productos.categoria_id', $categoriaId);
+        }
+
+        return $builder
+            ->orderBy('productos.nombre', 'ASC')
+            ->orderBy('precio_productos.cantidad_desde', 'ASC')
+            ->findAll();
+    }
+
+    private function prepararPreciosParaPdf(array $precios): array
+    {
+        $productos = [];
+
+        foreach ($precios as $precio) {
+            $productoId = (int) ($precio['producto_id'] ?? 0);
+
+            if ($productoId <= 0) {
+                continue;
+            }
+
+            if (!isset($productos[$productoId])) {
+                $productos[$productoId] = [
+                    'producto_nombre' => $precio['producto_nombre'] ?? '-',
+                    'molino'          => $precio['molino'] ?: 'Sin molino',
+                    'rangos'          => [],
+                ];
+            }
+
+            $productos[$productoId]['rangos'][] = $precio;
+        }
+
+        $agrupados = [];
+
+        foreach ($productos as $producto) {
+            $molino = $producto['molino'] ?: 'Sin molino';
+
+            if (!isset($agrupados[$molino])) {
+                $agrupados[$molino] = [
+                    'molino'    => $molino,
+                    'productos' => [],
+                ];
+            }
+
+            $agrupados[$molino]['productos'][] = [
+                'producto_nombre' => $producto['producto_nombre'],
+                'mas_10'          => $this->resolverPrecioPorCantidad($producto['rangos'], 11),
+                'hasta_50'        => $this->resolverPrecioPorCantidad($producto['rangos'], 50),
+                'mas_50'          => $this->resolverPrecioPorCantidad($producto['rangos'], 51),
+            ];
+        }
+
+        ksort($agrupados, SORT_NATURAL | SORT_FLAG_CASE);
+
+        foreach ($agrupados as &$grupo) {
+            usort($grupo['productos'], static function (array $a, array $b): int {
+                return strcasecmp($a['producto_nombre'], $b['producto_nombre']);
+            });
+        }
+
+        unset($grupo);
+
+        return array_values($agrupados);
+    }
+
+    private function resolverPrecioPorCantidad(array $rangos, int $cantidad): ?float
+    {
+        foreach ($rangos as $rango) {
+            $desde = (int) ($rango['cantidad_desde'] ?? 0);
+            $hasta = $rango['cantidad_hasta'] !== null ? (int) $rango['cantidad_hasta'] : null;
+
+            if ($cantidad >= $desde && ($hasta === null || $cantidad <= $hasta)) {
+                return (float) ($rango['precio_unitario'] ?? 0);
+            }
+        }
+
+        return null;
+    }
+
+    private function obtenerLogoListaPrecios(): string
+    {
+        $rutaLogo = FCPATH . 'img/logo-gp.png';
+
+        if (!is_file($rutaLogo)) {
+            return '';
+        }
+
+        $realPath = realpath($rutaLogo);
+
+        if ($realPath === false) {
+            return '';
+        }
+
+        return 'file:///' . str_replace('\\', '/', $realPath);
     }
 }

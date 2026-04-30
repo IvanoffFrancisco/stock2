@@ -75,7 +75,7 @@
         <span class="badge-stock badge-sin-stock">Sin stock</span>
         <span class="badge-stock badge-stock-bajo">Stock bajo</span>
         <span class="badge-stock badge-stock-justo">Stock justo</span>
-        <span class="badge-stock badge-stock-normal">Stock normal</span>
+        <span class="badge-stock badge-stock-normal">Normal</span>
     </div>
 
     <div class="card card-filtros shadow-sm rounded-4 mb-4">
@@ -160,7 +160,7 @@
                                     'sin_stock'   => 'Sin stock',
                                     'stock_bajo'  => 'Stock bajo',
                                     'stock_justo' => 'Stock justo',
-                                    default       => 'Stock normal',
+                                    default       => 'Normal',
                                 };
                             ?>
                             <tr class="<?= $filaClass ?>">
