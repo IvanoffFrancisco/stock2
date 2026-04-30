@@ -265,7 +265,6 @@ class PrecioProductos extends BaseController
 
         return redirect()->to('/precio-productos')->with('success', 'Precio actualizado correctamente.');
     }
-<<<<<<< HEAD
 
     private function obtenerPreciosFiltrados(PrecioProductoModel $precioProductoModel, string $buscar, string $molino, string $categoriaId): array
     {
@@ -378,6 +377,3 @@ class PrecioProductos extends BaseController
         return 'file:///' . str_replace('\\', '/', $realPath);
     }
 }
-=======
-}
->>>>>>> 1af66afc10e24b525023eb165d000176c1280b05
