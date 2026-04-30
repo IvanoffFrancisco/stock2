@@ -124,6 +124,7 @@ class PrecioProductos extends BaseController
 
         $rules = [
             'producto_id'      => 'required|is_not_unique[productos.id]',
+            'lista'            => 'required|max_length[100]',
             'cantidad_desde'   => 'required|integer|greater_than[0]',
             'cantidad_hasta'   => 'permit_empty|integer|greater_than[0]',
             'precio_unitario'  => 'required|decimal|greater_than[0]',
@@ -145,6 +146,7 @@ class PrecioProductos extends BaseController
 
         $precioProductoModel->save([
             'producto_id'      => $this->request->getPost('producto_id'),
+            'lista'            => trim((string) $this->request->getPost('lista')),
             'cantidad_desde'   => $cantidadDesde,
             'cantidad_hasta'   => $cantidadHasta,
             'precio_unitario'  => $this->request->getPost('precio_unitario'),
@@ -197,6 +199,7 @@ class PrecioProductos extends BaseController
 
         $rules = [
             'producto_id'     => 'required|is_not_unique[productos.id]',
+            'lista'           => 'required|max_length[100]',
             'cantidad_desde'  => 'required|integer|greater_than[0]',
             'cantidad_hasta'  => 'permit_empty|integer|greater_than[0]',
             'tipo_edicion'    => 'required|in_list[final,monto,porcentaje]',
@@ -254,6 +257,7 @@ class PrecioProductos extends BaseController
 
         $precioProductoModel->update($id, [
             'producto_id'      => $this->request->getPost('producto_id'),
+            'lista'            => trim((string) $this->request->getPost('lista')),
             'cantidad_desde'   => $cantidadDesde,
             'cantidad_hasta'   => $cantidadHasta,
             'precio_unitario'  => round($nuevoPrecio, 2),
@@ -261,6 +265,7 @@ class PrecioProductos extends BaseController
 
         return redirect()->to('/precio-productos')->with('success', 'Precio actualizado correctamente.');
     }
+<<<<<<< HEAD
 
     private function obtenerPreciosFiltrados(PrecioProductoModel $precioProductoModel, string $buscar, string $molino, string $categoriaId): array
     {
@@ -373,3 +378,6 @@ class PrecioProductos extends BaseController
         return 'file:///' . str_replace('\\', '/', $realPath);
     }
 }
+=======
+}
+>>>>>>> 1af66afc10e24b525023eb165d000176c1280b05

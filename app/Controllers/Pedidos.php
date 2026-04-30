@@ -84,6 +84,69 @@ class Pedidos extends BaseController
         ]);
     }
 
+
+    private function obtenerListasPrecio(): array
+    {
+        $precioProductoModel = new PrecioProductoModel();
+
+        $listas = $precioProductoModel
+            ->select('lista')
+            ->where('lista IS NOT NULL')
+            ->where('lista !=', '')
+            ->groupBy('lista')
+            ->orderBy('lista', 'ASC')
+            ->findAll();
+
+        $resultado = array_values(array_filter(array_map(static function ($item) {
+            return trim((string) ($item['lista'] ?? ''));
+        }, $listas)));
+
+        return !empty($resultado) ? $resultado : ['General'];
+    }
+
+    private function obtenerPreciosParaJavascript(): array
+    {
+        $precioProductoModel = new PrecioProductoModel();
+
+        $precios = $precioProductoModel
+            ->select('producto_id, lista, cantidad_desde, cantidad_hasta, precio_unitario')
+            ->orderBy('producto_id', 'ASC')
+            ->orderBy('lista', 'ASC')
+            ->orderBy('cantidad_desde', 'ASC')
+            ->findAll();
+
+        $resultado = [];
+
+        foreach ($precios as $precio) {
+            $productoId = (string) ($precio['producto_id'] ?? '');
+            $lista = trim((string) ($precio['lista'] ?? 'General'));
+
+            if ($productoId === '') {
+                continue;
+            }
+
+            if ($lista === '') {
+                $lista = 'General';
+            }
+
+            if (!isset($resultado[$productoId])) {
+                $resultado[$productoId] = [];
+            }
+
+            if (!isset($resultado[$productoId][$lista])) {
+                $resultado[$productoId][$lista] = [];
+            }
+
+            $resultado[$productoId][$lista][] = [
+                'desde'  => (int) $precio['cantidad_desde'],
+                'hasta'  => $precio['cantidad_hasta'] !== null ? (int) $precio['cantidad_hasta'] : null,
+                'precio' => (float) $precio['precio_unitario'],
+            ];
+        }
+
+        return $resultado;
+    }
+
     public function create()
     {
         $clienteModel = new ClienteModel();
@@ -100,8 +163,10 @@ class Pedidos extends BaseController
             ->findAll();
 
         return view('pedidos/create', [
-            'clientes'  => $clientes,
-            'productos' => $productos,
+            'clientes'        => $clientes,
+            'productos'       => $productos,
+            'listasPrecios'   => $this->obtenerListasPrecio(),
+            'preciosProducto' => $this->obtenerPreciosParaJavascript(),
         ]);
     }
 
@@ -114,6 +179,7 @@ class Pedidos extends BaseController
         $formaPago     = $request->getPost('forma_pago');
         $estado        = $request->getPost('estado') ?: 'pendiente';
         $descuento     = (float) ($request->getPost('descuento') ?: 0);
+        $listaPrecio   = trim((string) ($request->getPost('lista_precio') ?: 'General'));
         $observacion   = trim((string) $request->getPost('observacion'));
 
         $productoIds      = $request->getPost('producto_id') ?? [];
@@ -127,6 +193,7 @@ class Pedidos extends BaseController
             'forma_pago'    => 'permit_empty|max_length[50]',
             'estado'        => 'required|in_list[pendiente,entregado,cancelado]',
             'descuento'     => 'permit_empty|decimal',
+            'lista_precio'  => 'permit_empty|max_length[100]',
         ];
 
         if (!$this->validate($rules)) {
@@ -137,7 +204,7 @@ class Pedidos extends BaseController
             return redirect()->back()->withInput()->with('error', 'Debes agregar al menos un producto al pedido.');
         }
 
-        $resultado = $this->procesarDetallePedido($productoIds, $cantidades, $preciosUnitarios, $bonificados);
+        $resultado = $this->procesarDetallePedido($productoIds, $cantidades, $preciosUnitarios, $bonificados, $listaPrecio);
 
         if (!$resultado['ok']) {
             return redirect()->back()->withInput()->with('error', $resultado['error']);
@@ -165,6 +232,7 @@ class Pedidos extends BaseController
             'estado'         => $estado,
             'subtotal'       => $resultado['subtotal'],
             'descuento'      => $descuento,
+            'lista_precio'   => $listaPrecio,
             'total'          => max(0, $resultado['subtotal'] - $descuento),
             'observacion'    => $observacion !== '' ? $observacion : null,
             'created_at'     => date('Y-m-d H:i:s'),
@@ -280,10 +348,12 @@ class Pedidos extends BaseController
             ->findAll();
 
         return view('pedidos/edit', [
-            'pedido'    => $pedido,
-            'detalles'  => $detalles,
-            'clientes'  => $clientes,
-            'productos' => $productos,
+            'pedido'          => $pedido,
+            'detalles'        => $detalles,
+            'clientes'        => $clientes,
+            'productos'       => $productos,
+            'listasPrecios'   => $this->obtenerListasPrecio(),
+            'preciosProducto' => $this->obtenerPreciosParaJavascript(),
         ]);
     }
 
@@ -313,6 +383,7 @@ class Pedidos extends BaseController
         $formaPago     = $request->getPost('forma_pago');
         $estado        = $request->getPost('estado') ?: 'pendiente';
         $descuento     = (float) ($request->getPost('descuento') ?: 0);
+        $listaPrecio   = trim((string) ($request->getPost('lista_precio') ?: 'General'));
         $observacion   = trim((string) $request->getPost('observacion'));
 
         $productoIds      = $request->getPost('producto_id') ?? [];
@@ -326,6 +397,7 @@ class Pedidos extends BaseController
             'forma_pago'    => 'permit_empty|max_length[50]',
             'estado'        => 'required|in_list[pendiente,entregado,cancelado]',
             'descuento'     => 'permit_empty|decimal',
+            'lista_precio'  => 'permit_empty|max_length[100]',
         ];
 
         if (!$this->validate($rules)) {
@@ -336,7 +408,7 @@ class Pedidos extends BaseController
             return redirect()->back()->withInput()->with('error', 'Debes agregar al menos un producto al pedido.');
         }
 
-        $resultado = $this->procesarDetallePedido($productoIds, $cantidades, $preciosUnitarios, $bonificados);
+        $resultado = $this->procesarDetallePedido($productoIds, $cantidades, $preciosUnitarios, $bonificados, $listaPrecio);
 
         if (!$resultado['ok']) {
             return redirect()->back()->withInput()->with('error', $resultado['error']);
@@ -370,6 +442,7 @@ class Pedidos extends BaseController
             'estado'         => $estado,
             'subtotal'       => $resultado['subtotal'],
             'descuento'      => $descuento,
+            'lista_precio'   => $listaPrecio,
             'total'          => max(0, $resultado['subtotal'] - $descuento),
             'observacion'    => $observacion !== '' ? $observacion : null,
         ]);
@@ -521,7 +594,7 @@ class Pedidos extends BaseController
         return redirect()->to('/pedidos')->with('error', 'No se pudo actualizar el estado.');
     }
 
-    private function procesarDetallePedido(array $productoIds, array $cantidades, array $preciosUnitarios, array $bonificados): array
+    private function procesarDetallePedido(array $productoIds, array $cantidades, array $preciosUnitarios, array $bonificados, string $listaPrecio = 'General'): array
     {
         $precioProductoModel = new PrecioProductoModel();
         $productoModel       = new ProductoModel();
@@ -545,7 +618,7 @@ class Pedidos extends BaseController
                 continue;
             }
 
-            $precioSugerido = $this->buscarPrecioPorCantidad($precioProductoModel, $productoId, $cantidad);
+            $precioSugerido = $this->buscarPrecioPorLista($precioProductoModel, $productoId, $listaPrecio);
             $precioUnitarioFinal = $precioPost > 0 ? $precioPost : $precioSugerido;
 
             if ($bonificado === 1) {
@@ -797,20 +870,18 @@ class Pedidos extends BaseController
         ];
     }
 
-    private function buscarPrecioPorCantidad(PrecioProductoModel $precioProductoModel, int $productoId, int $cantidad): float
+    private function buscarPrecioPorLista(PrecioProductoModel $precioProductoModel, int $productoId, string $listaPrecio = 'General'): float
     {
-        $precios = $precioProductoModel
+        $listaPrecio = trim($listaPrecio) !== '' ? trim($listaPrecio) : 'General';
+
+        $precio = $precioProductoModel
             ->where('producto_id', $productoId)
-            ->orderBy('cantidad_desde', 'ASC')
-            ->findAll();
+            ->where('lista', $listaPrecio)
+            ->orderBy('id', 'ASC')
+            ->first();
 
-        foreach ($precios as $precio) {
-            $desde = (int) $precio['cantidad_desde'];
-            $hasta = $precio['cantidad_hasta'] !== null ? (int) $precio['cantidad_hasta'] : null;
-
-            if ($cantidad >= $desde && ($hasta === null || $cantidad <= $hasta)) {
-                return (float) $precio['precio_unitario'];
-            }
+        if ($precio) {
+            return (float) $precio['precio_unitario'];
         }
 
         return 0;
@@ -876,6 +947,7 @@ class Pedidos extends BaseController
             'detalles'  => $detalles,
             'subtotal'  => $pedido['subtotal'] ?? 0,
             'descuento' => $pedido['descuento'] ?? 0,
+            'listaPrecio' => $pedido['lista_precio'] ?? '-',
             'total'     => $pedido['total'] ?? 0,
             'empresa'   => [
                 'nombre'    => 'GP',

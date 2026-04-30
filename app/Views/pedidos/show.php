@@ -61,6 +61,7 @@
                     <p class="mb-2"><strong>Fecha pedido:</strong> <?= esc($pedido['fecha_pedido'] ?? '-') ?></p>
                     <p class="mb-2"><strong>Fecha entrega:</strong> <?= esc($pedido['fecha_entrega'] ?? '-') ?></p>
                     <p class="mb-2"><strong>Forma de pago:</strong> <?= esc($pedido['forma_pago'] ?? '-') ?></p>
+                    <p class="mb-2"><strong>Lista de precios:</strong> <?= esc($pedido['lista_precio'] ?? '-') ?></p>
 
                     <p class="mb-2">
                         <strong>Estado:</strong>

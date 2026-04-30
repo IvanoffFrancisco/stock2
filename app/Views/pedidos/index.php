@@ -119,6 +119,7 @@
                             <th class="py-3">Fecha pedido</th>
                             <th class="py-3">Fecha entrega</th>
                             <th class="py-3">Forma de pago</th>
+                            <th class="py-3">Lista</th>
                             <th class="py-3">Estado</th>
                             <th class="py-3">Subtotal</th>
                             <th class="py-3">Descuento</th>
@@ -136,6 +137,7 @@
                                     <td><?= esc($pedido['fecha_pedido'] ?? '-') ?></td>
                                     <td><?= esc($pedido['fecha_entrega'] ?? '-') ?></td>
                                     <td><?= esc($pedido['forma_pago'] ?? '-') ?></td>
+                                    <td><?= esc($pedido['lista_precio'] ?? '-') ?></td>
                                     <td>
                                         <?php
                                             $estado = $pedido['estado'];
@@ -199,7 +201,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="11" class="text-center py-4">
+                                <td colspan="12" class="text-center py-4">
                                     No hay pedidos registrados.
                                 </td>
                             </tr>

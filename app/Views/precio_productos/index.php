@@ -35,7 +35,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
             <h1 class="h3 mb-1">Precios de productos</h1>
+<<<<<<< HEAD
             <p class="text-muted mb-0">Precios por rango de cantidad de bolsas para consulta y exportaciÃ³n.</p>
+=======
+            <p class="text-muted mb-0">Precios por lista y rango de cantidad de bolsas</p>
+>>>>>>> 1af66afc10e24b525023eb165d000176c1280b05
         </div>
         <div class="d-flex gap-2">
             <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-secondary">Volver</a>
@@ -127,6 +131,7 @@
                         <tr>
                             <th class="px-4 py-3">ID</th>
                             <th class="py-3">Producto</th>
+                            <th class="py-3">Lista</th>
                             <th class="py-3">Molino</th>
                             <th class="py-3">Categoría</th>
                             <th class="py-3">Kg</th>
@@ -142,7 +147,16 @@
                             <?php foreach ($precios as $precio): ?>
                                 <tr>
                                     <td class="px-4"><?= esc($precio['id']) ?></td>
+<<<<<<< HEAD
                                     <td class="fw-semibold"><?= esc($precio['producto_nombre']) ?></td>
+=======
+                                    <td><?= esc($precio['producto_nombre']) ?></td>
+                                    <td>
+                                        <span class="badge text-bg-primary">
+                                            <?= esc($precio['lista'] ?? 'General') ?>
+                                        </span>
+                                    </td>
+>>>>>>> 1af66afc10e24b525023eb165d000176c1280b05
                                     <td><?= esc($precio['molino'] ?? '-') ?></td>
                                     <td><?= esc($precio['categoria_nombre']) ?></td>
                                     <td><?= esc($precio['kilogramos']) ?></td>
@@ -163,7 +177,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" class="text-center py-4">
+                                <td colspan="11" class="text-center py-4">
                                     No se encontraron precios con los filtros aplicados.
                                 </td>
                             </tr>

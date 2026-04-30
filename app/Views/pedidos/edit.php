@@ -110,6 +110,18 @@
                             value="<?= old('descuento', $pedido['descuento']) ?>"
                         >
                     </div>
+
+                    <div class="col-md-3 mb-4">
+                        <label for="lista_precio" class="form-label">Lista</label>
+                        <select class="form-select" id="lista_precio" name="lista_precio">
+                            <?php foreach (($listasPrecios ?? ['General']) as $lista): ?>
+                                <option value="<?= esc($lista) ?>" <?= (old('lista_precio', $pedido['lista_precio'] ?? 'General') === $lista) ? 'selected' : '' ?>>
+                                    <?= esc($lista) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="form-text">Se usa para sugerir precios cuando el precio unitario queda en 0.</div>
+                    </div>
                 </div>
 
                 <hr class="my-4">
@@ -151,7 +163,7 @@
                                     </td>
                                     <td>
                                         <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="<?= esc($detalle['precio_unitario']) ?>">
-                                        <div class="form-text">0 = usar después el precio sugerido</div>
+                                        <div class="form-text">0 = usar precio de la lista seleccionada</div>
                                     </td>
                                     <td class="text-center">
                                         <input type="checkbox" name="bonificado[<?= $index ?>]" class="form-check-input bonificado-input" <?= ((int) $detalle['bonificado'] === 1) ? 'checked' : '' ?>>
@@ -186,7 +198,7 @@
                                 <h5 class="card-title">Resumen</h5>
                                 <p class="mb-2">Subtotal estimado: <strong id="subtotalGeneral">$ 0,00</strong></p>
                                 <p class="mb-0">Total estimado: <strong id="totalGeneral">$ 0,00</strong></p>
-                                <small class="text-muted">El precio automático real se aplica en el backend si dejás precio en 0.</small>
+                                <small class="text-muted">Si dejás precio en 0, se usa el precio de la lista seleccionada. La cantidad no define la lista.</small>
                             </div>
                         </div>
                     </div>
@@ -201,6 +213,8 @@
 </div>
 
 <script>
+const precioSugeridoUrl = "<?= base_url('pedidos/precio-sugerido') ?>";
+
 const productosHtml = `
 <option value="">Seleccionar producto</option>
 <?php foreach ($productos as $producto): ?>
@@ -211,6 +225,87 @@ const productosHtml = `
 `;
 
 let bonificadoIndex = <?= count($detalles) ?>;
+
+function formatearMoneda(valor) {
+    return '$ ' + valor.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+async function obtenerPrecioSugeridoBackend(productoId, cantidad, listaPrecio) {
+    if (!productoId) {
+        return 0;
+    }
+
+    const params = new URLSearchParams({
+        producto_id: productoId,
+        cantidad: cantidad,
+        lista_precio: listaPrecio || 'General'
+    });
+
+    try {
+        const respuesta = await fetch(`${precioSugeridoUrl}?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!respuesta.ok) {
+            return 0;
+        }
+
+        const data = await respuesta.json();
+        return data && data.ok ? parseFloat(data.precio || 0) : 0;
+    } catch (error) {
+        console.error('Error buscando precio sugerido:', error);
+        return 0;
+    }
+}
+
+async function autocompletarPrecioFila(fila, forzar = false) {
+    const listaSelect = document.getElementById('lista_precio');
+    const productoSelect = fila.querySelector('.producto-select');
+    const cantidadInput = fila.querySelector('.cantidad-input');
+    const precioInput = fila.querySelector('.precio-input');
+    const bonificadoInput = fila.querySelector('.bonificado-input');
+
+    if (!productoSelect || !cantidadInput || !precioInput) {
+        return;
+    }
+
+    if (bonificadoInput && bonificadoInput.checked) {
+        precioInput.value = '0.00';
+        precioInput.dataset.auto = '1';
+        recalcularTotales();
+        return;
+    }
+
+    const precioActual = parseFloat(precioInput.value || 0);
+    const usaPrecioAutomatico = forzar || precioInput.dataset.auto === '1' || precioActual <= 0;
+
+    if (!usaPrecioAutomatico) {
+        recalcularTotales();
+        return;
+    }
+
+    const productoId = productoSelect.value;
+    const cantidad = parseInt(cantidadInput.value || 0);
+    const listaPrecio = listaSelect ? listaSelect.value : 'General';
+
+    // La cantidad se envía solo por compatibilidad con la ruta,
+    // pero el precio sugerido se busca por producto + lista.
+    const precio = await obtenerPrecioSugeridoBackend(productoId, cantidad, listaPrecio);
+    precioInput.value = precio > 0 ? precio.toFixed(2) : '0.00';
+    precioInput.dataset.auto = '1';
+
+    recalcularTotales();
+}
+
+async function autocompletarTodasLasFilas(forzar = false) {
+    const filas = document.querySelectorAll('#tablaDetalle tbody tr');
+    for (const fila of filas) {
+        await autocompletarPrecioFila(fila, forzar);
+    }
+}
 
 function recalcularTotales() {
     let subtotalGeneral = 0;
@@ -235,8 +330,8 @@ function recalcularTotales() {
     const descuento = parseFloat(document.getElementById('descuento').value || 0);
     const totalGeneral = Math.max(0, subtotalGeneral - descuento);
 
-    document.getElementById('subtotalGeneral').textContent = '$ ' + subtotalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('totalGeneral').textContent = '$ ' + totalGeneral.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('subtotalGeneral').textContent = formatearMoneda(subtotalGeneral);
+    document.getElementById('totalGeneral').textContent = formatearMoneda(totalGeneral);
 }
 
 document.getElementById('agregarFila').addEventListener('click', function () {
@@ -253,8 +348,8 @@ document.getElementById('agregarFila').addEventListener('click', function () {
             <input type="number" name="cantidad[]" class="form-control cantidad-input" min="1" value="1" required>
         </td>
         <td>
-            <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="0">
-            <div class="form-text">0 = usar después el precio sugerido</div>
+            <input type="number" step="0.01" name="precio_unitario[]" class="form-control precio-input" value="0.00" data-auto="1">
+            <div class="form-text">0 = usar precio de la lista seleccionada</div>
         </td>
         <td class="text-center">
             <input type="checkbox" name="bonificado[${bonificadoIndex}]" class="form-check-input bonificado-input">
@@ -273,18 +368,42 @@ document.getElementById('agregarFila').addEventListener('click', function () {
 });
 
 document.addEventListener('input', function (e) {
-    if (
-        e.target.classList.contains('cantidad-input') ||
-        e.target.classList.contains('precio-input') ||
-        e.target.id === 'descuento'
-    ) {
+    if (e.target.classList.contains('precio-input')) {
+        const valor = parseFloat(e.target.value || 0);
+        e.target.dataset.auto = valor > 0 ? '0' : '1';
+
+        if (valor <= 0) {
+            autocompletarPrecioFila(e.target.closest('tr'), true);
+            return;
+        }
+
+        recalcularTotales();
+        return;
+    }
+
+    if (e.target.classList.contains('cantidad-input')) {
+        autocompletarPrecioFila(e.target.closest('tr'));
+        return;
+    }
+
+    if (e.target.id === 'descuento') {
         recalcularTotales();
     }
 });
 
 document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('producto-select')) {
+        autocompletarPrecioFila(e.target.closest('tr'), true);
+        return;
+    }
+
+    if (e.target.id === 'lista_precio') {
+        autocompletarTodasLasFilas(false);
+        return;
+    }
+
     if (e.target.classList.contains('bonificado-input')) {
-        recalcularTotales();
+        autocompletarPrecioFila(e.target.closest('tr'), true);
     }
 });
 
@@ -298,7 +417,14 @@ document.addEventListener('click', function (e) {
     }
 });
 
-recalcularTotales();
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.precio-input').forEach((input) => {
+        const valor = parseFloat(input.value || 0);
+        input.dataset.auto = valor > 0 ? '0' : '1';
+    });
+
+    recalcularTotales();
+});
 </script>
 
 </body>

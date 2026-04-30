@@ -13,6 +13,7 @@
     $precioData = $precio ?? null;
 
     $productoSeleccionado = old('producto_id', $precioData['producto_id'] ?? '');
+    $lista = old('lista', $precioData['lista'] ?? 'General');
     $cantidadDesde = old('cantidad_desde', $precioData['cantidad_desde'] ?? '');
     $cantidadHasta = old('cantidad_hasta', $precioData['cantidad_hasta'] ?? '');
     $precioUnitarioActual = $precioData['precio_unitario'] ?? null;
@@ -42,7 +43,7 @@
                         <div>
                             <h2 class="fw-bold mb-1"><?= $esEdicion ? 'Editar precio' : 'Nuevo precio' ?></h2>
                             <p class="text-muted mb-0">
-                                <?= $esEdicion ? 'Modificar precio por valor final, monto o porcentaje' : 'Crear precio por rango de cantidad' ?>
+                                <?= $esEdicion ? 'Modificar lista, rango y precio' : 'Crear precio por lista y rango de cantidad' ?>
                             </p>
                         </div>
                         <a href="<?= base_url('precio-productos') ?>" class="btn btn-outline-secondary">Volver</a>
@@ -78,6 +79,23 @@
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lista" class="form-label">Lista</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="lista"
+                                name="lista"
+                                value="<?= esc($lista) ?>"
+                                placeholder="Ej: General, Lista 1, Lista 2, Mayorista"
+                                maxlength="100"
+                                required
+                            >
+                            <div class="form-text">
+                                Ejemplo: General, Lista 1, Lista 2, Mayorista, Minorista.
+                            </div>
                         </div>
 
                         <div class="row">
