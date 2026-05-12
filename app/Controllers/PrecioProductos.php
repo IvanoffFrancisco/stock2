@@ -73,6 +73,15 @@ class PrecioProductos extends BaseController
 
         $dompdf = new Dompdf($options);
 
+        $rutaLogo = FCPATH . 'img/logo-gp.png';
+        $logoExists = is_file($rutaLogo);
+        $logoPath = '';
+        $realLogoPath = $logoExists ? realpath($rutaLogo) : false;
+
+        if ($realLogoPath !== false) {
+            $logoPath = 'file:///' . str_replace('\\', '/', $realLogoPath);
+        }
+
         $html = view('pdf/lista_precios', [
             'preciosAgrupados' => $preciosAgrupados,
             'filtros' => [
@@ -82,7 +91,17 @@ class PrecioProductos extends BaseController
             ],
             'fechaDocumento' => date('d/m/Y'),
             'empresaNombre'   => 'GP',
-            'logoPath'        => $this->obtenerLogoListaPrecios(),
+            'logoPath'        => $logoPath,
+            'logoExists'      => $logoExists,
+            'logoDebug'       => $this->request->getGet('debug_logo') === '1',
+            'logoDebugInfo'   => [
+                'fcpath'      => FCPATH,
+                'rutaLogo'    => $rutaLogo,
+                'logoExists'  => $logoExists,
+                'fileExists'  => file_exists($rutaLogo),
+                'isReadable'  => is_readable($rutaLogo),
+                'logoPath'    => $logoPath,
+            ],
         ]);
 
         $dompdf->loadHtml($html);
@@ -360,20 +379,4 @@ class PrecioProductos extends BaseController
         return null;
     }
 
-    private function obtenerLogoListaPrecios(): string
-    {
-        $rutaLogo = FCPATH . 'img/logo-gp.png';
-
-        if (!is_file($rutaLogo)) {
-            return '';
-        }
-
-        $realPath = realpath($rutaLogo);
-
-        if ($realPath === false) {
-            return '';
-        }
-
-        return 'file:///' . str_replace('\\', '/', $realPath);
-    }
 }

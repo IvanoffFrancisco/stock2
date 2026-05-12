@@ -141,14 +141,36 @@
             border-top: 1px solid #d7dde6;
             padding-top: 7px;
         }
+
+        .logo-debug {
+            border: 1px solid #d97706;
+            background: #fff7ed;
+            color: #7c2d12;
+            padding: 6px 8px;
+            margin-bottom: 10px;
+            font-size: 8px;
+            line-height: 1.35;
+        }
     </style>
 </head>
 <body>
 
+    <?php if (!empty($logoDebug)): ?>
+        <div class="logo-debug">
+            <strong>Debug logo</strong><br>
+            FCPATH: <?= esc($logoDebugInfo['fcpath'] ?? '') ?><br>
+            rutaLogo: <?= esc($logoDebugInfo['rutaLogo'] ?? '') ?><br>
+            logoExists: <?= !empty($logoDebugInfo['logoExists']) ? 'si' : 'no' ?><br>
+            file_exists: <?= !empty($logoDebugInfo['fileExists']) ? 'si' : 'no' ?><br>
+            is_readable: <?= !empty($logoDebugInfo['isReadable']) ? 'si' : 'no' ?><br>
+            logoPath: <?= esc($logoDebugInfo['logoPath'] ?? '') ?>
+        </div>
+    <?php endif; ?>
+
     <table class="header-table">
         <tr>
             <td class="brand-cell">
-                <?php if (!empty($logoPath)): ?>
+                <?php if (!empty($logoExists) && !empty($logoPath)): ?>
                     <img class="logo" src="<?= esc($logoPath, 'attr') ?>" alt="Logo">
                     <span class="brand-name"><?= esc($empresaNombre ?? 'GP') ?></span>
                 <?php else: ?>
